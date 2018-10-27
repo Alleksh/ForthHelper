@@ -1,0 +1,15 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/close-hover.png</file>
+        <file>images/close.png</file>
+        <file>images/radio_button_checked.png</file>
+        <file>images/radio_button_checked_hover.png</file>
+        <file>images/radio_button_checked_selected.png</file>
+        <file>images/radio_button_unchecked.png</file>
+        <file>images/radio_button_unchecked_hover.png</file>
+        <file>images/check-box-checked.png</file>
+        <file>images/check-box-checked_hover.png</file>
+        <file>images/check-box-empty.png</file>
+        <file>images/check-box-empty_hover.png</file>
+    </qresource>
+</RCC>
