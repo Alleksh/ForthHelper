@@ -1,5 +1,5 @@
 #include "tab.h"
-#include "ui_tab.h"
+#include <QApplication>
 QAbstractItemModel *modelFromFile(const QString& fileName, QCompleter *completer)
 {
     QFile file(fileName);
