@@ -9,7 +9,7 @@ EditWordListDialog::EditWordListDialog(QWidget *parent) :
     ui->GiveIntegers->setValidator( new QIntValidator(0, 100, this) );
     ui->NeedIntegers->setValidator( new QIntValidator(0, 100, this) );
     ui->StartWord->setValidator(new QRegExpValidator(QRegExp("^\\S+$")));
-    setWindowTitle("Изменить словарь");
+    setWindowTitle("Изменить словарь");/*
     QFile file("words.txt");
     file.open(QIODevice::ReadOnly);
     QTextStream qts(&file);
@@ -48,12 +48,18 @@ EditWordListDialog::EditWordListDialog(QWidget *parent) :
         if(Str[i-1]=='%')
         {
             if(i!=1)
-                if(Str[i-2]=='%') continue;
+            {
+                if(Str[i-2]=='%')
+                {
+                    Str.erase((Str.begin() + int(i)) -1);
+                    continue;
+                }
+            }
             if(Str[i]=='#')
-        {
-            str[i]='\n';
-            Str.erase((Str.begin() + int(i)) -1);
-        }
+            {
+                Str[i]='\n';
+                Str.erase((Str.begin() + int(i)) -1);
+            }
             else if(Str[i]=='%')
                 Str.erase((Str.begin() + int(i)) -1);
         }
@@ -61,7 +67,8 @@ EditWordListDialog::EditWordListDialog(QWidget *parent) :
         WL.push_back(word);
     }
     file.close();
-    ui->list->sortItems(Qt::SortOrder::AscendingOrder);
+    ui->list->sortItems(Qt::SortOrder::AscendingOrder);*/
+    on_Reload_clicked();
     ui->list->setFocusPolicy(Qt::NoFocus);
     ui->list->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->list, SIGNAL(customContextMenuRequested(QPoint)),this,SLOT(ShowContextMenu(QPoint)));
@@ -78,9 +85,66 @@ void EditWordListDialog::on_Reload_clicked()
     ui->one_word->setCheckState(Qt::Unchecked);
     ui->isFunction->setChecked(0);
     ui->isVariable->setChecked(0);
+    WL.clear();
     ui->list->clear();
-    for(size_t i=0;i<WL.size();i++)
-        ui->list->addItem(WL[i].StartWord);
+    QFile file("words.txt");
+    file.open(QIODevice::ReadOnly);
+    QTextStream qts(&file);
+    while(!qts.atEnd())
+    {
+        Word word;
+        if(qts.atEnd()) break;
+        QString str = qts.readLine();
+        word.StartWord = str;
+        ui->list->addItem(str);
+        if(qts.atEnd()) break;
+        str = qts.readLine();
+        word.EndWords = str;
+        if(qts.atEnd()) break;
+        str = qts.readLine();
+        word.NeedNumbers = str.toInt();
+        if(qts.atEnd()) break;
+        str = qts.readLine();
+        word.GiveNumbers = str.toInt();
+        if(qts.atEnd()) break;
+        str = qts.readLine();
+        word.VF = str.toInt();
+        if(qts.atEnd()) break;
+        str = qts.readLine();
+        word.one_word = str.toInt();
+        if(qts.atEnd()) break;
+        str = qts.readLine();
+        word.StartAndEndWordInOneLine = str.toInt();
+        if(qts.atEnd()) break;
+        str = qts.readLine();
+        word.CreatesNewWord = str.toInt();
+        if(qts.atEnd()) break;
+        std::string Str = qts.readLine().toStdString();
+        for(size_t i=0;i<Str.size();i++)
+        if(i!=0)
+        if(Str[i-1]=='%')
+        {
+            if(i!=1)
+            {
+                if(Str[i-2]=='%')
+                {
+                    Str.erase((Str.begin() + int(i)) -1);
+                    continue;
+                }
+            }
+            if(Str[i]=='#')
+            {
+                Str[i]='\n';
+                Str.erase((Str.begin() + int(i)) -1);
+            }
+            else if(Str[i]=='%')
+                Str.erase((Str.begin() + int(i)) -1);
+        }
+        word.description = QString::fromStdString(Str);
+        WL.push_back(word);
+    }
+    file.close();
+    ui->list->sortItems(Qt::SortOrder::AscendingOrder);
 }
 void EditWordListDialog::addItem()
 {
@@ -147,23 +211,59 @@ EditWordListDialog::~EditWordListDialog()
 }
 void EditWordListDialog::Load(size_t id)
 {
+    WL[NOW_ID].VF = 1;
+    ui->EndWords->setReadOnly(0);
+    ui->NeedIntegers->setReadOnly(0);
+    ui->GiveIntegers->setReadOnly(0);
+    ui->SaEWiOL->setEnabled(1);
+    ui->one_word->setEnabled(1);
+    ui->CreateNewWord->setEnabled(1);
+    ui->isVariable->setEnabled(1);
     ui->StartWord->setText(WL[id].StartWord);
     ui->EndWords->setText(WL[id].EndWords);
     ui->desciption->setPlainText(WL[id].description);
     ui->NeedIntegers->setText(QString::number(WL[id].NeedNumbers));
     ui->GiveIntegers->setText(QString::number(WL[id].GiveNumbers));
     if(WL[id].StartAndEndWordInOneLine)
-            ui->SaEWiOL->setCheckState(Qt::Checked);
-    else    ui->SaEWiOL->setCheckState(Qt::Unchecked);
+    {
+        ui->SaEWiOL->setCheckState(Qt::Checked);
+        on_SaEWiOL_stateChanged(2);
+    }
+    else
+    {
+        ui->SaEWiOL->setCheckState(Qt::Unchecked);
+        on_SaEWiOL_stateChanged(0);
+    }
     if(WL[id].CreatesNewWord)
-            ui->CreateNewWord->setCheckState(Qt::Checked);
-    else    ui->CreateNewWord->setCheckState(Qt::Unchecked);
+    {
+        ui->CreateNewWord->setCheckState(Qt::Checked);
+        on_CreateNewWord_stateChanged(2);
+    }
+    else
+    {
+        ui->CreateNewWord->setCheckState(Qt::Unchecked);
+        on_CreateNewWord_stateChanged(0);
+    }
     if(WL[id].one_word)
-            ui->one_word->setCheckState(Qt::Checked);
-    else    ui->one_word->setCheckState(Qt::Unchecked);
+    {
+        ui->one_word->setCheckState(Qt::Checked);
+        on_one_word_stateChanged(2);
+    }
+    else
+    {
+        ui->one_word->setCheckState(Qt::Unchecked);
+        on_one_word_stateChanged(0);
+    }
     if(WL[id].VF)
-            ui->isFunction->setChecked(1);
-    else    ui->isVariable->setChecked(1);
+    {
+        ui->isFunction->setChecked(1);
+        on_isFunction_clicked();
+    }
+    else
+    {
+        ui->isVariable->setChecked(1);
+        on_isVariable_clicked();
+    }
 }
 void EditWordListDialog::on_list_itemClicked(QListWidgetItem *item)
 {
@@ -210,12 +310,37 @@ void EditWordListDialog::on_Save_clicked()
 void EditWordListDialog::on_isFunction_clicked()
 {
     if(NOW_ID>WL.size()) return;
-    WL[NOW_ID].VF = 1;
+    if(!WL[NOW_ID].VF)
+    {
+        WL[NOW_ID].VF = 1;
+        ui->EndWords->setReadOnly(0);
+        ui->NeedIntegers->setReadOnly(0);
+        ui->GiveIntegers->setReadOnly(0);
+        ui->SaEWiOL->setEnabled(1);
+        ui->one_word->setEnabled(1);
+        ui->CreateNewWord->setEnabled(1);
+    }
 }
 void EditWordListDialog::on_isVariable_clicked()
 {
     if(NOW_ID>WL.size()) return;
-    WL[NOW_ID].VF = 0;
+
+    if(WL[NOW_ID].VF)
+    {
+        ui->EndWords->setText("");
+        ui->EndWords->setReadOnly(1);
+        ui->NeedIntegers->setText("0");
+        ui->NeedIntegers->setReadOnly(1);
+        ui->GiveIntegers->setText("1");
+        ui->GiveIntegers->setReadOnly(1);
+        ui->SaEWiOL->setCheckState(Qt::CheckState::Unchecked);
+        ui->SaEWiOL->setEnabled(0);
+        ui->one_word->setCheckState(Qt::CheckState::Unchecked);
+        ui->one_word->setEnabled(0);
+        ui->CreateNewWord->setCheckState(Qt::CheckState::Unchecked);
+        ui->CreateNewWord->setEnabled(0);
+        WL[NOW_ID].VF = 0;
+    }
 }
 #include <QMessageBox>
 void EditWordListDialog::on_StartWord_editingFinished()
@@ -321,7 +446,7 @@ void EditWordListDialog::on_CreateNewWord_stateChanged(int arg1)
     {
         ui->EndWords->setReadOnly(0);
         ui->EndWords->setText("");
-        WL[NOW_ID].CreatesNewWord = 1;
+        WL[NOW_ID].CreatesNewWord = 0;
         ui->SaEWiOL->setEnabled(1);
     }
 }
