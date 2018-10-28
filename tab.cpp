@@ -72,32 +72,38 @@ CodeEditor::CodeEditor(QTextBrowser* ProblemsBar, Project* project, QString path
                         color:#FAFAFA;
                         }
                         )");
-    this->setLineWrapMode(LineWrapMode::NoWrap);
-    QFont font("Consolas",16);
-    this->setFont(font);
-    updateLineNumberAreaWidth(0);
-    highlightCurrentLine();
     this->project = project;
     this->pathToFile = pathToFile;
     this->filename = filename;
+    this->QTbrowser = ProblemsBar;
+    compiler = new Compiler(project);
+
     QFile File(filename + ".cwl");
     File.open(QIODevice::WriteOnly);
     File.close();
-    compiler = new Compiler(project);
-    this->QTbrowser = ProblemsBar;
+
     QFile file(pathToFile);
     file.open(QIODevice::ReadOnly);
-    QTextStream qts(&file);
-    QString Text = qts.readAll();
+        QTextStream qts(&file);
+        QString Text = qts.readAll();
+        this->appendHtml(compiler->DrawText(Text));
     file.close();
-    this->appendHtml(compiler->DrawText(Text));
+
+    this->setLineWrapMode(LineWrapMode::NoWrap);
+    QFont font("Consolas",16);
+    this->setFont(font);
+
+    updateLineNumberAreaWidth(0);
+    highlightCurrentLine();
+
+    this->QTbrowser->setText(compiler->GetErrorQString());
+
     QCompleter* completer = new QCompleter(this);
     completer->setModel(modelFromFile("words.cwl", completer));
     completer->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
     completer->setCaseSensitivity(Qt::CaseInsensitive);
     completer->setWrapAround(false);
     setCompleter(completer);
-    this->QTbrowser->setText(compiler->GetErrorQString());
 }
 CodeEditor::~CodeEditor()
 
@@ -114,6 +120,7 @@ CodeEditor::~CodeEditor()
     delete c;
     delete lineNumberArea;
 }
+//Line number area functions
 int CodeEditor::lineNumberAreaWidth()
 {
     int digits = 1;
@@ -194,6 +201,8 @@ void CodeEditor::lineNumberAreaPaintEvent(QPaintEvent *event)
               ++blockNumber;
           }
       }
+
+//Completer functions
 void CodeEditor::setCompleter(QCompleter *completer)
 {
     if (c)
@@ -272,7 +281,6 @@ void CodeEditor::keyPressEvent(QKeyEvent *e)
             c->popup()->hide();
             return;
         }
-
         if (completionPrefix != c->completionPrefix()) {
             c->setCompletionPrefix(completionPrefix);
             c->popup()->setCurrentIndex(c->completionModel()->index(0, 0));
@@ -282,6 +290,9 @@ void CodeEditor::keyPressEvent(QKeyEvent *e)
                     + c->popup()->verticalScrollBar()->sizeHint().width());
         c->complete(cr);
 }
+
+
+
 void CodeEditor::save()
 {
 saveBackup();
