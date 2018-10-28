@@ -97,9 +97,8 @@ public:
     }
     ~Compiler()
     {
-        delete project;
     }
-    QString GetStyle(QString);
+    QString GetLineStyle(QString);
     QString DrawText(QString);
     QString GetErrorQString();
     bool UpdateCompleter(QString, QString);

@@ -20,10 +20,32 @@
    <string>MainWindow</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color:#2C2E2F;
-</string>
+   <string notr="true">MainWindow
+{
+background-color:#2C2E2F;
+}
+
+QMenu {
+    background-color: #414243; /* sets background of the menu */
+    border: 1px solid #232425;
+}
+
+QMenu::item {
+    /* sets background of menu item. set this to something non-transparent
+        if you want menu color and menu item color to be different */
+    background-color: transparent;
+    color:#c1c1c1;
+    padding: 4px 8px;
+}
+
+QMenu::item:selected { /* when user selects item using mouse or keyboard */
+    background-color: #6b6c6d;
+}</string>
   </property>
   <widget class="QWidget" name="centralWidget">
+   <property name="styleSheet">
+    <string notr="true">background-color:#2C2E2F;</string>
+   </property>
    <layout class="QGridLayout" name="gridLayout_3">
     <property name="sizeConstraint">
      <enum>QLayout::SetNoConstraint</enum>
@@ -533,27 +555,45 @@ QTextBrowser
        <string notr="true">QTreeView {
 background-color:#414243;
 border:1px solid #414243;
+    outline: 0;
 }
-
 QTreeView::item {
-    color:#c1c1c1;
+    outline: 0;
+background-color:#4a4d4f;
+ border: 2px solid #4a4d4f;
+    border-bottom-color: #4a4d4f; /* same as the pane color */
+    min-width: 12px;
+    min-height: 12px;
+    padding: 4px;
+    padding-top: 2px;
+	padding-bottom:02px;
+color:#c1c1c1;
 }
 
 QTreeView::item:hover {
     background-color: #6b6c6d;
-    border: 1px solid #232425;
+	border:#6b6c6d;
 }
 
 QTreeView::item:selected {
+	background:#007ACC;
+    border-color: #007ACC;
+    color:#FAFAFA;
+}
+QMenu {
+    background-color: #414243; /* sets background of the menu */
     border: 1px solid #232425;
-background-color:#27292a;
 }
 
-QTreeView::item:selected:active{
-    background-color: #6b6c6d;
+QMenu::item {
+    /* sets background of menu item. set this to something non-transparent
+        if you want menu color and menu item color to be different */
+    background-color: transparent;
+    color:#c1c1c1;
+    padding: 4px 8px;
 }
 
-QTreeView::item:selected:!active {
+QMenu::item:selected { /* when user selects item using mouse or keyboard */
     background-color: #6b6c6d;
 }</string>
       </property>
@@ -571,11 +611,15 @@ QTreeView::item:selected:!active {
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">QMenuBar::item {
-color:#c1c1c1;
+    <string notr="true">QMenuBar
+{
+background-color:#2C2E2F;
+}
+QMenuBar::item {
+	color:#c1c1c1;
     spacing: 8px; /* spacing between menu bar items */
     padding: 3px 6px;
-    background: transparent;
+background-color:#2C2E2F;
 }
 
 QMenuBar::item:selected { /* when selected using mouse or keyboard */

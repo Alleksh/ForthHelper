@@ -1,23 +1,23 @@
 #include "compiler.h"
 
-QString Compiler::GetStyle(QString word)
+QString Compiler::GetLineStyle(QString word)
 {
-return "<p>" + word + "</p>";
+    if(word=="&nbsp;") return "<p>"  + word + "</p>";
+    return "<p>"  + word + "</p>";
 }
 QString Compiler::DrawText(QString _Val)
 {
 QString returnValue, buffer;
     for(int i=0;i<_Val.size();i++)
-        if(_Val[i]=="\n")
+        if(_Val[i]=='\n')
         {
-            if(i!=0)
-                if(_Val[i-1]=="\n")
-                    buffer+=" ";
-        returnValue+=GetStyle(buffer);
+            if(i>1)
+                if((_Val[i-2]=='\n' && _Val[i-1]==' ') || (_Val[i-1]=='\n'))
+                    buffer+="&nbsp;";
+        returnValue+=GetLineStyle(buffer);
         buffer = "";
         }
         else  buffer+=_Val[i];
-    returnValue+=GetStyle(buffer);
 return returnValue;
 }
 QString Compiler::GetErrorQString()

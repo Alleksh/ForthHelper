@@ -11,6 +11,8 @@
 #include <QStringListModel>
 #include <QTextEdit>
 #include "tab.h"
+#include <QDesktopServices>
+#include <QMessageBox>
 namespace Ui {
 class MainWindow;
 }
@@ -25,7 +27,18 @@ public:
     Project* project = nullptr;
     std::vector<CodeEditor*> Tabs;
     void configure();
+    QPoint now_pos;
+    void LoadProjectTree();
 private slots:
+    void AddFile();
+    void AddFolder();
+
+    void changeName();
+
+    void eraseItem();
+
+    void ShowContextMenu(QPoint);
+
     void on_CreateProject_triggered();
 
     void on_OpenProject_triggered();
@@ -33,6 +46,7 @@ private slots:
     void on_SaveAndExit_triggered();
 
     void on_ProjectTree_doubleClicked(const QModelIndex &index);
+
     void on_Files_tabCloseRequested(int index);
 
     void on_CompilerOutput_tabCloseRequested(int index);

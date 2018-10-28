@@ -1,32 +1,73 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "editwordlistdialog.h"
-#include <QDesktopServices>
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     ui->Files->clear();
+    ui->ProjectTree->setRootIsDecorated(false);
+    ui->ProjectTree->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(ui->ProjectTree, SIGNAL(customContextMenuRequested(QPoint)),this,SLOT(ShowContextMenu(QPoint)));
+}
+void MainWindow::ShowContextMenu(QPoint position)
+{
+    if(project==nullptr) return;
+    now_pos = position;
+    QPoint globalPos = ui->ProjectTree->mapToGlobal(position);
+       QMenu myMenu;
+       myMenu.setStyleSheet(
+R"(QMenu {
+       background-color: #414243;
+       border: 1px solid #232425;
+   }
+
+   QMenu::item {
+       background-color: transparent;
+       color:#c1c1c1;
+       padding: 4px 8px;
+   }
+
+   QMenu::item:selected {
+       background-color: #6b6c6d;
+   })");
+       QMenu subMenu(&myMenu);
+       subMenu.setTitle("Создать...");
+       subMenu.setStyleSheet(
+R"(QMenu {
+       background-color: #414243;
+       border: 1px solid #232425;
+   }
+
+   QMenu::item {
+       background-color: transparent;
+       color:#c1c1c1;
+       padding: 4px 8px;
+   }
+
+   QMenu::item:selected {
+       background-color: #6b6c6d;
+   })");
+       subMenu.addAction("Создать папку", this, SLOT(AddFolder()));
+       subMenu.addAction("Создать файл FORTH", this, SLOT(AddFile()));
+       myMenu.addMenu(&subMenu);
+       myMenu.addSeparator();
+       myMenu.addAction("Изменить имя файла", this, SLOT(changeName()));
+       myMenu.addAction("Удалить файл",  this, SLOT(eraseItem()));
+       myMenu.exec(globalPos);
 }
 MainWindow::~MainWindow()
 {
     delete ui;
-    delete project;
 }
-void MainWindow::configure()
-{   qDebug() << "configure called";
-    if(project==nullptr) return;
-    ui->Status->showMessage("Выводим...");
-    ui->ProjectName->setText(project->ProjectName);
+void MainWindow::LoadProjectTree()
+{
     QStringList filters;
     auto list = project->GFPaN();
     for(size_t i=0;i<list.size();i++) filters << list[i].second;
-    qDebug() << project->ProjectFolder;
+
     QDirModel *model = new QDirModel;
-    for(size_t i=0;i<Tabs.size();i++) Tabs[i]->save();
-    Tabs.clear();
-    ui->Files->clear();
     model->setFilter(QDir::AllDirs | QDir::Files | QDir::NoDotAndDotDot);
     model->setNameFilters(filters);
     ui->ProjectTree->setModel(model);
@@ -35,6 +76,18 @@ void MainWindow::configure()
     ui->ProjectTree->hideColumn(2);
     ui->ProjectTree->hideColumn(3);
     ui->ProjectTree->header()->hide();
+}
+void MainWindow::configure()
+{
+    qDebug() << "configure called";
+    if(project==nullptr) return;
+    ui->Status->showMessage("Выводим...");
+    ui->ProjectName->setText(project->ProjectName);
+    qDebug() << project->ProjectFolder;
+    for(size_t i=0;i<Tabs.size();i++) Tabs[i]->save();
+    LoadProjectTree();
+    Tabs.clear();
+    ui->Files->clear();
     ui->Status->showMessage("Готово!",5000);
 }
 void MainWindow::on_OpenProject_triggered()
@@ -144,7 +197,6 @@ void MainWindow::on_CompilerOutput_tabCloseRequested(int index)
     ui->CompilerOutput->removeTab(index);
     ui->Status->showMessage("Готово!",5000);
 }
-#include <QMessageBox>
 void MainWindow::on_EditCurrentWordList_triggered()
 {
     EditWordListDialog EWLD (this);
@@ -158,4 +210,21 @@ void MainWindow::on_VKDirectButton_clicked()
 {
     QUrl vk("https://vk.com/im?sel=391846880");
     QDesktopServices::openUrl(vk);
+}
+
+void MainWindow::AddFile()
+{
+
+}
+void MainWindow::AddFolder()
+{
+
+}
+void MainWindow::changeName()
+{
+
+}
+void MainWindow::eraseItem()
+{
+
 }
