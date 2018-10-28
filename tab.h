@@ -43,7 +43,7 @@ private slots:
 private:
     Compiler* compiler;
     QString textUnderCursor() const;
-    QCompleter *c;
+    QCompleter *c = nullptr;
     QWidget *lineNumberArea;
     QTextBrowser *QTbrowser;
     int CI = 0;

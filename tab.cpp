@@ -77,7 +77,6 @@ CodeEditor::CodeEditor(QTextBrowser* ProblemsBar, Project* project, QString path
     this->setFont(font);
     updateLineNumberAreaWidth(0);
     highlightCurrentLine();
-    this->c = new QCompleter(this);
     this->project = project;
     this->pathToFile = pathToFile;
     this->filename = filename;
@@ -86,14 +85,18 @@ CodeEditor::CodeEditor(QTextBrowser* ProblemsBar, Project* project, QString path
     File.close();
     compiler = new Compiler(project);
     this->QTbrowser = ProblemsBar;
-    compiler->UpdateCompleter("words.cwl");
-    this->UpdateCompleter();
     QFile file(pathToFile);
     file.open(QIODevice::ReadOnly);
     QTextStream qts(&file);
-    QString Text =qts.readAll();
+    QString Text = qts.readAll();
     file.close();
     this->appendHtml(compiler->DrawText(Text));
+    QCompleter* completer = new QCompleter(this);
+    completer->setModel(modelFromFile("words.cwl", completer));
+    completer->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
+    completer->setCaseSensitivity(Qt::CaseInsensitive);
+    completer->setWrapAround(false);
+    setCompleter(completer);
     this->QTbrowser->setText(compiler->GetErrorQString());
 }
 CodeEditor::~CodeEditor()
@@ -137,13 +140,15 @@ void CodeEditor::updateLineNumberArea(const QRect &rect, int dy)
 
     if (rect.contains(viewport()->rect()))
         updateLineNumberAreaWidth(0);
-}void CodeEditor::resizeEvent(QResizeEvent *e)
+}
+void CodeEditor::resizeEvent(QResizeEvent *e)
 {
     QPlainTextEdit::resizeEvent(e);
 
     QRect cr = contentsRect();
     lineNumberArea->setGeometry(QRect(cr.left(), cr.top(), lineNumberAreaWidth(), cr.height()));
-}void CodeEditor::highlightCurrentLine()
+}
+void CodeEditor::highlightCurrentLine()
 {
     QList<QTextEdit::ExtraSelection> extraSelections;
 
@@ -200,51 +205,6 @@ void CodeEditor::setCompleter(QCompleter *completer)
 
     c->setWidget(this);
     c->setCompletionMode(QCompleter::PopupCompletion);
-    c->popup()->setStyleSheet(
-R"(
-    QScrollBar:horizontal {
-        color:#AFAFAF;
-    background-color:#2C2E2F;
-    }
-
-    QScrollBar::handle:horizontal {
-
-     border: 2px groove #6b6c6d;
-    border-radius:4px;
-    background-color:#2C2E2F;
-        color:#AFAFAF;
-        min-width: 30px;
-    }
-
-    QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
-        color:#c1c1c1;
-    background-color:#2C2E2F;
-    }
-
-    QScrollBar:vertical {
-        color:#AFAFAF;
-    background-color:#2C2E2F;
-     }
-     QScrollBar::handle:vertical {
-     border: 2px groove #6b6c6d;
-    border-radius:4px;
-    background-color:#2C2E2F;
-        color:#AFAFAF;
-         min-height: 30px;
-     }
-     QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
-        background: #2C2E2F;
-     }
-
-    QListView::item {
-        color:black;
-        margin:2px;
-    }
-
-    QListView::item:selected {
-        background: orange;
-    }
-)");
     c->setCaseSensitivity(Qt::CaseInsensitive);
     QObject::connect(c, SIGNAL(activated(QString)),
                      this, SLOT(insertCompletion(QString)));
@@ -379,11 +339,12 @@ void CodeEditor::UpdateText()
         this->QTbrowser->setText(compiler->GetErrorQString());
         CI-=2;
     }
+    //else if(CI%25==0) UpdateCompleter();
 }
 void CodeEditor::UpdateCompleter()
 {
+    if(!compiler->UpdateCompleter("words.cwl",this->toPlainText())) return;
     QCompleter* completer = new QCompleter(this);
-    if(!compiler->UpdateCompleter("words.cwl")) return;
     completer->setModel(modelFromFile("words.cwl", completer));
     completer->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
     completer->setCaseSensitivity(Qt::CaseInsensitive);

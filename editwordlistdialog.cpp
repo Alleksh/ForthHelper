@@ -145,6 +145,7 @@ void EditWordListDialog::on_Reload_clicked()
     }
     file.close();
     ui->list->sortItems(Qt::SortOrder::AscendingOrder);
+    NOW_ID = 4294967295;//-1 in uint
 }
 void EditWordListDialog::addItem()
 {
@@ -175,7 +176,6 @@ void EditWordListDialog::eraseItem()
     now_point.setX(0);
     on_Reload_clicked();
 }
-#include <QMenu>
 void EditWordListDialog::ShowContextMenu(const QPoint& position)
 {
     this->now_point = position;
@@ -202,7 +202,6 @@ R"(QMenu {
        myMenu.addAction("Удалить элемент",  this, SLOT(eraseItem()));
        myMenu.exec(globalPos);
 }
-#include <QMessageBox>
 EditWordListDialog::~EditWordListDialog()
 {
     if(QMessageBox::question(nullptr,"", "Возможно Вы не сохранили изменения. Сохранить?")!=65536)
@@ -342,7 +341,6 @@ void EditWordListDialog::on_isVariable_clicked()
         WL[NOW_ID].VF = 0;
     }
 }
-#include <QMessageBox>
 void EditWordListDialog::on_StartWord_editingFinished()
 {
     if(NOW_ID>WL.size()) return;

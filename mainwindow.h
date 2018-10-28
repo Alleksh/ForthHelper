@@ -39,6 +39,8 @@ private slots:
 
     void on_EditCurrentWordList_triggered();
 
+    void on_VKDirectButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 };

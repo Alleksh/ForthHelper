@@ -3,10 +3,12 @@
 
 #include <QDialog>
 #include <compiler.h>
+#include <QMenu>
+#include <QMessageBox>
+#include <QListWidgetItem>
 namespace Ui {
 class EditWordListDialog;
 }
-#include <QListWidgetItem>
 class EditWordListDialog : public QDialog
 {
     Q_OBJECT
@@ -17,7 +19,7 @@ public:
     ~EditWordListDialog();
     void Load(size_t id);
     QPoint now_point;
-    size_t NOW_ID = -1;
+    size_t NOW_ID;
 private slots:
     void addItem();
     void eraseItem();

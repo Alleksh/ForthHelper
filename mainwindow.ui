@@ -226,7 +226,7 @@ Alleksh#0284</string>
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_4">
+             <widget class="QPushButton" name="VKDirectButton">
               <property name="styleSheet">
                <string notr="true">QPushButton {
 color: lightblue;

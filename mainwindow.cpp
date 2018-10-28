@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "editwordlistdialog.h"
+#include <QDesktopServices>
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -8,7 +9,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     ui->Files->clear();
 }
-
 MainWindow::~MainWindow()
 {
     delete ui;
@@ -153,4 +153,9 @@ void MainWindow::on_EditCurrentWordList_triggered()
     if(project!=nullptr)
     if(QMessageBox::question(nullptr,"", "Вы изменили словарь. \nЧтобы изменения вступили в силу,\n необходимо перезагрузить проект.\n Перезагрузить?")!=65536)
     configure();
+}
+void MainWindow::on_VKDirectButton_clicked()
+{
+    QUrl vk("https://vk.com/im?sel=391846880");
+    QDesktopServices::openUrl(vk);
 }
