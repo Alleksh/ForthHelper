@@ -20,12 +20,48 @@
    <string>Dialog</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color:#2C2E2F;
-</string>
+   <string notr="true">
+
+QListWidget:QScrollBar:horizontal {
+                            color:#AFAFAF;
+                        background-color:#2C2E2F;
+                        }
+
+                        QScrollBar::handle:horizontal {
+
+                         border: 2px groove #6b6c6d;
+                        border-radius:4px;
+                        background-color:#2C2E2F;
+                            color:#AFAFAF;
+                            min-width: 40px;
+                        }
+
+                        QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
+                            color:#c1c1c1;
+                        background-color:#2C2E2F;
+                        }
+
+                        QScrollBar:vertical {
+                            color:#AFAFAF;
+                        background-color:#2C2E2F;
+                         }
+                         QScrollBar::handle:vertical {
+                         border: 2px groove #6b6c6d;
+                        border-radius:4px;
+                        background-color:#2C2E2F;
+                            color:#AFAFAF;
+                             min-height: 80px;
+                         }
+                         QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+                            background: #2C2E2F;
+                         }
+QDialog
+{background-color:#2C2E2F;
+}</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <property name="leftMargin">
-    <number>5</number>
+    <number>4</number>
    </property>
    <property name="topMargin">
     <number>0</number>
@@ -39,444 +75,504 @@
    <property name="spacing">
     <number>0</number>
    </property>
-   <item row="0" column="0">
-    <layout class="QHBoxLayout" name="horizontalLayout_4">
+   <item row="0" column="0" colspan="2">
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
      <property name="spacing">
       <number>0</number>
      </property>
      <item>
-      <layout class="QVBoxLayout" name="verticalLayout_8">
+      <layout class="QVBoxLayout" name="verticalLayout_7">
+       <property name="spacing">
+        <number>0</number>
+       </property>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <layout class="QHBoxLayout" name="horizontalLayout">
          <property name="spacing">
           <number>0</number>
          </property>
          <item>
-          <layout class="QVBoxLayout" name="verticalLayout_7">
+          <layout class="QVBoxLayout" name="verticalLayout">
            <property name="spacing">
             <number>0</number>
            </property>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout">
-             <property name="spacing">
-              <number>0</number>
-             </property>
-             <item>
-              <layout class="QVBoxLayout" name="verticalLayout">
-               <property name="spacing">
-                <number>0</number>
-               </property>
-               <item>
-                <widget class="QLabel" name="label">
-                 <property name="styleSheet">
-                  <string notr="true">
-    spacing: 5px;
-	color: #c1c1c1;</string>
-                 </property>
-                 <property name="text">
-                  <string>Начальное слово:</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="label_3">
-                 <property name="styleSheet">
-                  <string notr="true">
-    spacing: 5px;
-	color: #c1c1c1;</string>
-                 </property>
-                 <property name="text">
-                  <string>Окончательные слова(через запятую):</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="label_2">
-                 <property name="styleSheet">
-                  <string notr="true">
-    spacing: 5px;
-	color: #c1c1c1;</string>
-                 </property>
-                 <property name="text">
-                  <string>Нужно чисел для работы:</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="label_4">
-                 <property name="styleSheet">
-                  <string notr="true">
-    spacing: 5px;
-	color: #c1c1c1;</string>
-                 </property>
-                 <property name="text">
-                  <string>Выдает чисел после работы:</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-             <item>
-              <layout class="QVBoxLayout" name="verticalLayout_2">
-               <property name="spacing">
-                <number>0</number>
-               </property>
-               <item>
-                <widget class="QLineEdit" name="StartWord">
-                 <property name="styleSheet">
-                  <string notr="true">QLineEdit
-{
-    border-style: solid;
-    border-width: 1px;
-    border-color: #27292a;
-    color:#d1d1d1;
-	background-color:#414243;
-}</string>
-                 </property>
-                 <property name="text">
-                  <string/>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLineEdit" name="EndWords">
-                 <property name="styleSheet">
-                  <string notr="true">QLineEdit
-{
-    border-style: solid;
-    border-width: 1px;
-    border-color: #27292a;
-    color:#d1d1d1;
-	background-color:#414243;
-}</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLineEdit" name="NeedIntegers">
-                 <property name="styleSheet">
-                  <string notr="true">QLineEdit
-{
-    border-style: solid;
-    border-width: 1px;
-    border-color: #27292a;
-    color:#d1d1d1;
-	background-color:#414243;
-}</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLineEdit" name="GivesIntegers">
-                 <property name="styleSheet">
-                  <string notr="true">QLineEdit
-{
-    border-style: solid;
-    border-width: 1px;
-    border-color: #27292a;
-    color:#d1d1d1;
-	background-color:#414243;
-}</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_2">
-             <item>
-              <layout class="QVBoxLayout" name="verticalLayout_5">
-               <property name="spacing">
-                <number>12</number>
-               </property>
-               <item>
-                <layout class="QVBoxLayout" name="verticalLayout_3">
-                 <property name="spacing">
-                  <number>4</number>
-                 </property>
-                 <item>
-                  <widget class="QRadioButton" name="isFunction">
-                   <property name="styleSheet">
-                    <string notr="true">QRadioButton{
-    spacing: 5px;
-	color: #c1c1c1;
-}
-QRadioButton::indicator {
-    width: 13px;
-    height: 13px;
-}
-
-QRadioButton::indicator::unchecked {
-    image: url(:/images/radio_button_unchecked.png);
-}
-
-QRadioButton::indicator:unchecked:hover {
-    image: url(:/images/radio_button_unchecked_hover.png);
-}
-
-QRadioButton::indicator:unchecked:pressed {
-    image: url(:/images/radio_button_unchecked_hover.png);
-}
-
-QRadioButton::indicator::checked {
-    image: url(:/images/radio_button_checked.png);
-}
-
-QRadioButton::indicator:checked:hover {
-    image: url(:/images/radio_button_checked_hover.png);
-}
-
-QRadioButton::indicator:checked:pressed {
-    image: url(:/images/radio_button_checked_selected.png);
-}</string>
-                   </property>
-                   <property name="text">
-                    <string>Функция?</string>
-                   </property>
-                   <property name="checked">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QRadioButton" name="isVariable">
-                   <property name="styleSheet">
-                    <string notr="true">QRadioButton{
-    spacing: 5px;
-	color: #c1c1c1;
-}
-QRadioButton::indicator {
-    width: 13px;
-    height: 13px;
-}
-
-QRadioButton::indicator::unchecked {
-    image: url(:/images/radio_button_unchecked.png);
-}
-
-QRadioButton::indicator:unchecked:hover {
-    image: url(:/images/radio_button_unchecked_hover.png);
-}
-
-QRadioButton::indicator:unchecked:pressed {
-    image: url(:/images/radio_button_unchecked_hover.png);
-}
-
-QRadioButton::indicator::checked {
-    image: url(:/images/radio_button_checked.png);
-}
-
-QRadioButton::indicator:checked:hover {
-    image: url(:/images/radio_button_checked_hover.png);
-}
-
-QRadioButton::indicator:checked:pressed {
-    image: url(:/images/radio_button_checked_selected.png);
-}</string>
-                   </property>
-                   <property name="text">
-                    <string>Переменная?</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item>
-                <layout class="QVBoxLayout" name="verticalLayout_4">
-                 <property name="spacing">
-                  <number>4</number>
-                 </property>
-                 <item>
-                  <widget class="QCheckBox" name="one_word">
-                   <property name="styleSheet">
-                    <string notr="true">QCheckBox{
-    spacing: 5px;
-	color: #c1c1c1;
-}
-
-QCheckBox::indicator {
-    width: 13px;
-    height: 13px;
-}
-
-QCheckBox::indicator:unchecked {
-    image: url(:/images/check-box-empty.png);
-}
-
-QCheckBox::indicator:unchecked:hover {
-    image: url(:/images/check-box-empty_hover.png);
-}
-
-QCheckBox::indicator:unchecked:pressed {
-    image: url(:/images/check-box-empty_hover.png);
-}
-
-QCheckBox::indicator:checked {
-    image: url(:/images/check-box-checked.png);
-}
-
-QCheckBox::indicator:checked:hover {
-    image: url(:/images/check-box-checked_hover.png);
-}
-
-QCheckBox::indicator:checked:pressed {
-    image: url(:/images/check-box-checked_hover.png);
-}
-/*
-QCheckBox::indicator:indeterminate:hover {
-    image: url(:/images/checkbox_indeterminate_hover.png);
-}
-
-QCheckBox::indicator:indeterminate:pressed {
-    image: url(:/images/checkbox_indeterminate_pressed.png);
-}*/</string>
-                   </property>
-                   <property name="text">
-                    <string>Одно слово</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QCheckBox" name="SaEWiOL">
-                   <property name="styleSheet">
-                    <string notr="true">QCheckBox{
-    spacing: 5px;
-	color: #c1c1c1;
-}
-
-QCheckBox::indicator {
-    width: 13px;
-    height: 13px;
-}
-
-QCheckBox::indicator:unchecked {
-    image: url(:/images/check-box-empty.png);
-}
-
-QCheckBox::indicator:unchecked:hover {
-    image: url(:/images/check-box-empty_hover.png);
-}
-
-QCheckBox::indicator:unchecked:pressed {
-    image: url(:/images/check-box-empty_hover.png);
-}
-
-QCheckBox::indicator:checked {
-    image: url(:/images/check-box-checked.png);
-}
-
-QCheckBox::indicator:checked:hover {
-    image: url(:/images/check-box-checked_hover.png);
-}
-
-QCheckBox::indicator:checked:pressed {
-    image: url(:/images/check-box-checked_hover.png);
-}
-/*
-QCheckBox::indicator:indeterminate:hover {
-    image: url(:/images/checkbox_indeterminate_hover.png);
-}
-
-QCheckBox::indicator:indeterminate:pressed {
-    image: url(:/images/checkbox_indeterminate_pressed.png);
-}*/</string>
-                   </property>
-                   <property name="text">
-                    <string>Начальное и окончательное слово в одной строке</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QCheckBox" name="CreateNewWord">
-                   <property name="styleSheet">
-                    <string notr="true">QCheckBox{
-    spacing: 5px;
-	color: #c1c1c1;
-}
-
-QCheckBox::indicator {
-    width: 13px;
-    height: 13px;
-}
-
-QCheckBox::indicator:unchecked {
-    image: url(:/images/check-box-empty.png);
-}
-
-QCheckBox::indicator:unchecked:hover {
-    image: url(:/images/check-box-empty_hover.png);
-}
-
-QCheckBox::indicator:unchecked:pressed {
-    image: url(:/images/check-box-empty_hover.png);
-}
-
-QCheckBox::indicator:checked {
-    image: url(:/images/check-box-checked.png);
-}
-
-QCheckBox::indicator:checked:hover {
-    image: url(:/images/check-box-checked_hover.png);
-}
-
-QCheckBox::indicator:checked:pressed {
-    image: url(:/images/check-box-checked_hover.png);
-}
-/*
-QCheckBox::indicator:indeterminate:hover {
-    image: url(:/images/checkbox_indeterminate_hover.png);
-}
-
-QCheckBox::indicator:indeterminate:pressed {
-    image: url(:/images/checkbox_indeterminate_pressed.png);
-}*/</string>
-                   </property>
-                   <property name="text">
-                    <string>Создает новое слово</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-              </layout>
-             </item>
-             <item>
-              <spacer name="horizontalSpacer">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-            </layout>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QVBoxLayout" name="verticalLayout_6">
-           <item>
-            <widget class="QLabel" name="label_5">
+            <widget class="QLabel" name="label">
              <property name="styleSheet">
               <string notr="true">
     spacing: 5px;
 	color: #c1c1c1;</string>
              </property>
              <property name="text">
-              <string>Описание:</string>
+              <string>Начальное слово:</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QTextEdit" name="desciption">
+            <widget class="QLabel" name="label_3">
              <property name="styleSheet">
-              <string notr="true">QScrollBar:horizontal {
+              <string notr="true">
+    spacing: 5px;
+	color: #c1c1c1;</string>
+             </property>
+             <property name="text">
+              <string>Окончательные слова(через пробел):</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_2">
+             <property name="styleSheet">
+              <string notr="true">
+    spacing: 5px;
+	color: #c1c1c1;</string>
+             </property>
+             <property name="text">
+              <string>Нужно чисел для работы:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_4">
+             <property name="styleSheet">
+              <string notr="true">
+    spacing: 5px;
+	color: #c1c1c1;</string>
+             </property>
+             <property name="text">
+              <string>Выдает чисел после работы:</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_2">
+           <property name="spacing">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QLineEdit" name="StartWord">
+             <property name="styleSheet">
+              <string notr="true">QLineEdit
+{
+    border-style: solid;
+    border-width: 1px;
+    border-color: #27292a;
+    color:#d1d1d1;
+	background-color:#414243;
+}QMenu {
+    background-color: #414243; /* sets background of the menu */
+    border: 1px solid #232425;
+}
+
+QMenu::item {
+    /* sets background of menu item. set this to something non-transparent
+        if you want menu color and menu item color to be different */
+    background-color: transparent;
+    color:#c1c1c1;
+    padding: 4px 8px;
+	padding-right:40px;
+}
+
+QMenu::item:selected { /* when user selects item using mouse or keyboard */
+    background-color: #6b6c6d;
+}</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="EndWords">
+             <property name="styleSheet">
+              <string notr="true">QLineEdit
+{
+    border-style: solid;
+    border-width: 1px;
+    border-color: #27292a;
+    color:#d1d1d1;
+	background-color:#414243;
+}QMenu {
+    background-color: #414243; /* sets background of the menu */
+    border: 1px solid #232425;
+}
+
+QMenu::item {
+    /* sets background of menu item. set this to something non-transparent
+        if you want menu color and menu item color to be different */
+    background-color: transparent;
+    color:#c1c1c1;
+    padding: 4px 8px;
+	padding-right:40px;
+}
+
+QMenu::item:selected { /* when user selects item using mouse or keyboard */
+    background-color: #6b6c6d;
+}</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="NeedIntegers">
+             <property name="styleSheet">
+              <string notr="true">QLineEdit
+{
+    border-style: solid;
+    border-width: 1px;
+    border-color: #27292a;
+    color:#d1d1d1;
+	background-color:#414243;
+}QMenu {
+    background-color: #414243; /* sets background of the menu */
+    border: 1px solid #232425;
+}
+
+QMenu::item {
+    /* sets background of menu item. set this to something non-transparent
+        if you want menu color and menu item color to be different */
+    background-color: transparent;
+    color:#c1c1c1;
+    padding: 4px 8px;
+	padding-right:40px;
+}
+
+QMenu::item:selected { /* when user selects item using mouse or keyboard */
+    background-color: #6b6c6d;
+}</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="GiveIntegers">
+             <property name="styleSheet">
+              <string notr="true">QLineEdit
+{
+    border-style: solid;
+    border-width: 1px;
+    border-color: #27292a;
+    color:#d1d1d1;
+	background-color:#414243;
+}QMenu {
+    background-color: #414243; /* sets background of the menu */
+    border: 1px solid #232425;
+}
+
+QMenu::item {
+    /* sets background of menu item. set this to something non-transparent
+        if you want menu color and menu item color to be different */
+    background-color: transparent;
+    color:#c1c1c1;
+    padding: 4px 8px;
+	padding-right:40px;
+}
+
+QMenu::item:selected { /* when user selects item using mouse or keyboard */
+    background-color: #6b6c6d;
+}</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_5">
+           <property name="spacing">
+            <number>12</number>
+           </property>
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_3">
+             <property name="spacing">
+              <number>4</number>
+             </property>
+             <item>
+              <widget class="QRadioButton" name="isFunction">
+               <property name="styleSheet">
+                <string notr="true">QRadioButton{
+    spacing: 5px;
+	color: #c1c1c1;
+}
+QRadioButton::indicator {
+    width: 13px;
+    height: 13px;
+}
+
+QRadioButton::indicator::unchecked {
+    image: url(:/images/radio_button_unchecked.png);
+}
+
+QRadioButton::indicator:unchecked:hover {
+    image: url(:/images/radio_button_unchecked_hover.png);
+}
+
+QRadioButton::indicator:unchecked:pressed {
+    image: url(:/images/radio_button_unchecked_hover.png);
+}
+
+QRadioButton::indicator::checked {
+    image: url(:/images/radio_button_checked.png);
+}
+
+QRadioButton::indicator:checked:hover {
+    image: url(:/images/radio_button_checked_hover.png);
+}
+
+QRadioButton::indicator:checked:pressed {
+    image: url(:/images/radio_button_checked_selected.png);
+}</string>
+               </property>
+               <property name="text">
+                <string>Функция?</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="isVariable">
+               <property name="styleSheet">
+                <string notr="true">QRadioButton{
+    spacing: 5px;
+	color: #c1c1c1;
+}
+QRadioButton::indicator {
+    width: 13px;
+    height: 13px;
+}
+
+QRadioButton::indicator::unchecked {
+    image: url(:/images/radio_button_unchecked.png);
+}
+
+QRadioButton::indicator:unchecked:hover {
+    image: url(:/images/radio_button_unchecked_hover.png);
+}
+
+QRadioButton::indicator:unchecked:pressed {
+    image: url(:/images/radio_button_unchecked_hover.png);
+}
+
+QRadioButton::indicator::checked {
+    image: url(:/images/radio_button_checked.png);
+}
+
+QRadioButton::indicator:checked:hover {
+    image: url(:/images/radio_button_checked_hover.png);
+}
+
+QRadioButton::indicator:checked:pressed {
+    image: url(:/images/radio_button_checked_selected.png);
+}</string>
+               </property>
+               <property name="text">
+                <string>Переменная?</string>
+               </property>
+               <property name="checked">
+                <bool>false</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_4">
+             <property name="spacing">
+              <number>4</number>
+             </property>
+             <item>
+              <widget class="QCheckBox" name="one_word">
+               <property name="styleSheet">
+                <string notr="true">QCheckBox{
+    spacing: 5px;
+	color: #c1c1c1;
+}
+
+QCheckBox::indicator {
+    width: 13px;
+    height: 13px;
+}
+
+QCheckBox::indicator:unchecked {
+    image: url(:/images/check-box-empty.png);
+}
+
+QCheckBox::indicator:unchecked:hover {
+    image: url(:/images/check-box-empty_hover.png);
+}
+
+QCheckBox::indicator:unchecked:pressed {
+    image: url(:/images/check-box-empty_hover.png);
+}
+
+QCheckBox::indicator:checked {
+    image: url(:/images/check-box-checked.png);
+}
+
+QCheckBox::indicator:checked:hover {
+    image: url(:/images/check-box-checked_hover.png);
+}
+
+QCheckBox::indicator:checked:pressed {
+    image: url(:/images/check-box-checked_hover.png);
+}
+/*
+QCheckBox::indicator:indeterminate:hover {
+    image: url(:/images/checkbox_indeterminate_hover.png);
+}
+
+QCheckBox::indicator:indeterminate:pressed {
+    image: url(:/images/checkbox_indeterminate_pressed.png);
+}*/</string>
+               </property>
+               <property name="text">
+                <string>Одно слово</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="SaEWiOL">
+               <property name="styleSheet">
+                <string notr="true">QCheckBox{
+    spacing: 5px;
+	color: #c1c1c1;
+}
+
+QCheckBox::indicator {
+    width: 13px;
+    height: 13px;
+}
+
+QCheckBox::indicator:unchecked {
+    image: url(:/images/check-box-empty.png);
+}
+
+QCheckBox::indicator:unchecked:hover {
+    image: url(:/images/check-box-empty_hover.png);
+}
+
+QCheckBox::indicator:unchecked:pressed {
+    image: url(:/images/check-box-empty_hover.png);
+}
+
+QCheckBox::indicator:checked {
+    image: url(:/images/check-box-checked.png);
+}
+
+QCheckBox::indicator:checked:hover {
+    image: url(:/images/check-box-checked_hover.png);
+}
+
+QCheckBox::indicator:checked:pressed {
+    image: url(:/images/check-box-checked_hover.png);
+}
+/*
+QCheckBox::indicator:indeterminate:hover {
+    image: url(:/images/checkbox_indeterminate_hover.png);
+}
+
+QCheckBox::indicator:indeterminate:pressed {
+    image: url(:/images/checkbox_indeterminate_pressed.png);
+}*/</string>
+               </property>
+               <property name="text">
+                <string>Начальное и окончательное слово в одной строке</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="CreateNewWord">
+               <property name="styleSheet">
+                <string notr="true">QCheckBox{
+    spacing: 5px;
+	color: #c1c1c1;
+}
+
+QCheckBox::indicator {
+    width: 13px;
+    height: 13px;
+}
+
+QCheckBox::indicator:unchecked {
+    image: url(:/images/check-box-empty.png);
+}
+
+QCheckBox::indicator:unchecked:hover {
+    image: url(:/images/check-box-empty_hover.png);
+}
+
+QCheckBox::indicator:unchecked:pressed {
+    image: url(:/images/check-box-empty_hover.png);
+}
+
+QCheckBox::indicator:checked {
+    image: url(:/images/check-box-checked.png);
+}
+
+QCheckBox::indicator:checked:hover {
+    image: url(:/images/check-box-checked_hover.png);
+}
+
+QCheckBox::indicator:checked:pressed {
+    image: url(:/images/check-box-checked_hover.png);
+}
+/*
+QCheckBox::indicator:indeterminate:hover {
+    image: url(:/images/checkbox_indeterminate_hover.png);
+}
+
+QCheckBox::indicator:indeterminate:pressed {
+    image: url(:/images/checkbox_indeterminate_pressed.png);
+}*/</string>
+               </property>
+               <property name="text">
+                <string>Создает новое слово</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_6">
+       <item>
+        <widget class="QLabel" name="label_5">
+         <property name="styleSheet">
+          <string notr="true">
+    spacing: 5px;
+	color: #c1c1c1;</string>
+         </property>
+         <property name="text">
+          <string>Описание:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QTextEdit" name="desciption">
+         <property name="styleSheet">
+          <string notr="true">QScrollBar:horizontal {
                             color:#AFAFAF;
                         background-color:#2C2E2F;
                         }
@@ -516,54 +612,53 @@ QCheckBox::indicator:indeterminate:pressed {
                         border-color: #27292a;
 						background-color:#414243;
                         color:#FAFAFA;
-                        }</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <spacer name="verticalSpacer">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
+                        }QMenu {
+    background-color: #414243; /* sets background of the menu */
+    border: 1px solid #232425;
+}
+
+QMenu::item {
+    /* sets background of menu item. set this to something non-transparent
+        if you want menu color and menu item color to be different */
+    background-color: transparent;
+    color:#c1c1c1;
+    padding: 4px 8px;
+	padding-right:40px;
+}
+
+QMenu::item:selected { /* when user selects item using mouse or keyboard */
+    background-color: #6b6c6d;
+}</string>
          </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
+        </widget>
        </item>
       </layout>
      </item>
-     <item>
-      <widget class="QListView" name="list">
-       <property name="minimumSize">
-        <size>
-         <width>200</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>300</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QListView
+    </layout>
+   </item>
+   <item row="0" column="2" rowspan="3">
+    <widget class="QListWidget" name="list">
+     <property name="minimumSize">
+      <size>
+       <width>200</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>250</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QListWidget
 {
                         border-style: solid;
                         border-width: 2px;
                         border-color: #27292a;
 						background-color:#414243;
 }
-
-
-QListView::item {
+QListWidget::item {
 background-color:#4a4d4f;
  border: 2px solid #4a4d4f;
     border-bottom-color: #4a4d4f; /* same as the pane color */
@@ -572,28 +667,114 @@ background-color:#4a4d4f;
     padding: 4px;
     padding-top: 2px;
 	padding-bottom:02px;
+color:#c1c1c1;
 }
 
-QListView::item:selected {
+QListWidget::item:selected {
     border-color: #007ACC;
     color:#FAFAFA;
 	background:#007ACC;
 }
 
-QListView::item:selected:!active {
+QListWidget::item:selected:!active {
 }
 
 QListView::item:selected:active {
 }
 
-QListView::item:hover {
+QListWidget::item:hover {
     background-color: #6b6c6d;
 	border:#6b6c6d;
+}QMenu {
+    background-color: #414243; /* sets background of the menu */
+    border: 1px solid #232425;
+}
+
+QMenu::item {
+    /* sets background of menu item. set this to something non-transparent
+        if you want menu color and menu item color to be different */
+    background-color: transparent;
+    color:#c1c1c1;
+    padding: 4px 8px;
+}
+
+QMenu::item:selected { /* when user selects item using mouse or keyboard */
+    background-color: #6b6c6d;
 }</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <layout class="QHBoxLayout" name="horizontalLayout_4">
+     <item>
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="Reload">
+       <property name="styleSheet">
+        <string notr="true">QPushButton{
+    border-style: solid;
+    border-width: 1px;
+    border-color: #27292a;
+    color:#c1c1c1;
+	background-color:#414243;
+	padding:5px;
+}
+QPushButton::pressed {
+    background-color: #6b6c6d;
+    border-style: inset;
+}</string>
+       </property>
+       <property name="text">
+        <string>Перезагрузить</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="Save">
+       <property name="styleSheet">
+        <string notr="true">QPushButton{
+    border-style: solid;
+    border-width: 1px;
+    border-color: #27292a;
+    color:#c1c1c1;
+	background-color:#414243;
+	padding:5px;
+}
+QPushButton::pressed {
+    background-color: #6b6c6d;
+    border-style: inset;
+}</string>
+       </property>
+       <property name="text">
+        <string>Сохранить</string>
        </property>
       </widget>
      </item>
     </layout>
+   </item>
+   <item row="2" column="0">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>239</height>
+      </size>
+     </property>
+    </spacer>
    </item>
   </layout>
  </widget>

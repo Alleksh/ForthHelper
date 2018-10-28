@@ -5,29 +5,35 @@ struct Word
 {
 
     QString StartWord,
-            EndWord;
-    int NeedNumbers, GiveNumbers;
+            EndWords,
+            description;
+    int     NeedNumbers,
+            GiveNumbers;
     //0 var
     //1 func
     bool    VF,
             one_word,
             StartAndEndWordInOneLine,
-            CreateNewWord;
-};
-
-class WordList
-{
-public:
-    std::vector<Word> list;
-    WordList()
+            CreatesNewWord;
+    bool operator==(Word& _Val)
     {
-
+           return   (StartWord==_Val.StartWord && EndWords==_Val.EndWords && description==_Val.description &&
+                    NeedNumbers==_Val.NeedNumbers && GiveNumbers==_Val.GiveNumbers && VF==_Val.VF && one_word == _Val.one_word &&
+                    StartAndEndWordInOneLine==_Val.StartAndEndWordInOneLine && CreatesNewWord==_Val.CreatesNewWord);
+    }
+    bool operator==(QString& _Val)
+    {
+       return (StartWord==_Val);
+    }
+    bool operator==(const char*& _Val)
+    {
+        return StartWord==_Val;
     }
 };
 class Compiler
 {
 public:
-    WordList WL;
+    std::vector<Word> WL;
     Project* project;
     Compiler(Project* project)
     {

@@ -152,7 +152,5 @@ void MainWindow::on_EditCurrentWordList_triggered()
     EWLD.exec();
     if(project!=nullptr)
     if(QMessageBox::question(nullptr,"", "Вы изменили словарь. \nЧтобы изменения вступили в силу,\n необходимо перезагрузить проект.\n Перезагрузить?")!=65536)
-    {
     configure();
-    }
 }

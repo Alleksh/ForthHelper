@@ -104,9 +104,7 @@ CodeEditor::~CodeEditor()
     QTextStream qts(&file);
     if(this->toPlainText()!=qts.readAll())
     if(QMessageBox::question(nullptr,"", "Файл " + this->filename + " не сохранён. Сохранить?")!=65536)
-    {
     save();
-    }
     file.close();
 
     delete compiler;
@@ -297,16 +295,6 @@ void CodeEditor::keyPressEvent(QKeyEvent *e)
     {
         save();
         QPlainTextEdit::keyPressEvent(e);
-    }
-   if((e->modifiers() & Qt::ControlModifier) && e->key() == Qt::Key_Plus)
-    {
-        this->zoomIn(2);
-       return;
-    }
-    else if((e->modifiers() & Qt::ControlModifier) && e->key() == Qt::Key_Minus)
-    {
-        this->zoomOut(2);
-       return;
     }
     bool isShortcut = ((e->modifiers() & Qt::ControlModifier) && e->key() == Qt::Key_E); // CTRL+E
     if (!c || !isShortcut)
