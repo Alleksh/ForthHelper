@@ -21,7 +21,7 @@ void MainWindow::LoadProjectTree()
     QStringList filters;
     auto list = project->GFPaN();
     for(size_t i=0;i<list.size();i++) filters << list[i].second;
-
+    if(filters.isEmpty()) filters << ":.:";
     QDirModel *model = new QDirModel;
     model->setFilter(QDir::AllDirs | QDir::Files | QDir::NoDotAndDotDot);
     model->setNameFilters(filters);
@@ -240,6 +240,7 @@ void MainWindow::AddFile()
     file.close();
     project->AddFile(project->ProjectFolder + _Val + "/" + filename);
     LoadProjectTree();
+    ui->Status->showMessage("Готово!",5000);
 }
 void MainWindow::AddFolder()
 {
@@ -259,6 +260,7 @@ void MainWindow::AddFolder()
     }
     QDir().mkdir(project->ProjectFolder+folder);
     LoadProjectTree();
+    ui->Status->showMessage("Готово!",5000);
 }
 void MainWindow::changeName()
 {
@@ -266,5 +268,31 @@ void MainWindow::changeName()
 }
 void MainWindow::eraseItem()
 {
-
+    QString _Val = ui->ProjectTree->indexAt(now_pos).data().toString(), _Val2;
+    qDebug() << _Val;
+    if(_Val=="" || !_Val.contains('.'))
+    {
+        ui->Status->showMessage("Удалить можно только лишь файл!",10000);
+        return;
+    }
+    auto Val = project->GFPaN();
+    for(size_t i=0;i<Val.size();i++)
+    {
+        if(Val[i].second==_Val)
+        {
+            if(QMessageBox::question(nullptr,"Вы уверены?", "Вы уверены, что хотите удалить файл " + Val[i].second)==65536)
+                return;
+            for(int y=0;y<ui->Files->count();y++)
+                if(ui->Files->tabText(y)==Val[i].second)
+                {
+                    ui->Files->removeTab(y);
+                    break;
+                }
+            project->RemoveFile(Val[i].first);
+            ui->Status->showMessage("Готово!",5000);
+            LoadProjectTree();
+            return;
+        }
+    }
+    ui->Status->showMessage("Произошла какая-то ошибка. Файл удалить не удалось.",10000);
 }

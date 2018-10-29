@@ -13,7 +13,7 @@ public:
     Project(QString);
     void Init();
     void AddFile(QString);
-    void ChangeName(QString, QString);
+    void ChangeName(QString);
     void RemoveFile(QString);
     QStringList GetFilePaths();
     //get file paths and names

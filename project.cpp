@@ -55,14 +55,35 @@ void Project::AddFile(QString PathToFile)
     delete QTS;
     delete file;
 }
-void Project::ChangeName(QString PathToFile, QString NewName)
+void Project::ChangeName(QString PathToFile)
 {
     qDebug() << "ChangeName called";
+
 }
 void Project::RemoveFile(QString PathToFile)
 {
     qDebug() << "RemoveFile called";
-
+    QFile *file = new QFile(ProjectFolder + "Project.frthp");
+    file->open(QIODevice::ReadOnly);
+    QTextStream* QTS = new QTextStream(file);
+    QString buffer;
+    while(!QTS->atEnd())
+    {
+        QString nowLine = QTS->readLine();
+        if(!(nowLine.isEmpty() || nowLine==PathToFile))
+        buffer+= nowLine+'\n';
+    }
+    QFile::remove(PathToFile);
+    file->close();
+    delete file;
+    delete QTS;
+    file = new QFile(ProjectFolder + "Project.frthp");
+    file->open(QIODevice::WriteOnly);
+    QTS = new QTextStream(file);
+    (*QTS) << buffer;
+    file->close();
+    delete file;
+    delete QTS;
 }
 QStringList Project::GetFilePaths()
 {
