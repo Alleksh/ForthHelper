@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "editwordlistdialog.h"
+#include "changenamewidget.h"
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -10,52 +11,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->ProjectTree->setRootIsDecorated(false);
     ui->ProjectTree->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->ProjectTree, SIGNAL(customContextMenuRequested(QPoint)),this,SLOT(ShowContextMenu(QPoint)));
-}
-void MainWindow::ShowContextMenu(QPoint position)
-{
-    if(project==nullptr) return;
-    now_pos = position;
-    QPoint globalPos = ui->ProjectTree->mapToGlobal(position);
-       QMenu myMenu;
-       myMenu.setStyleSheet(
-R"(QMenu {
-       background-color: #414243;
-       border: 1px solid #232425;
-   }
-
-   QMenu::item {
-       background-color: transparent;
-       color:#c1c1c1;
-       padding: 4px 8px;
-   }
-
-   QMenu::item:selected {
-       background-color: #6b6c6d;
-   })");
-       QMenu subMenu(&myMenu);
-       subMenu.setTitle("Создать...");
-       subMenu.setStyleSheet(
-R"(QMenu {
-       background-color: #414243;
-       border: 1px solid #232425;
-   }
-
-   QMenu::item {
-       background-color: transparent;
-       color:#c1c1c1;
-       padding: 4px 8px;
-   }
-
-   QMenu::item:selected {
-       background-color: #6b6c6d;
-   })");
-       subMenu.addAction("Создать папку", this, SLOT(AddFolder()));
-       subMenu.addAction("Создать файл FORTH", this, SLOT(AddFile()));
-       myMenu.addMenu(&subMenu);
-       myMenu.addSeparator();
-       myMenu.addAction("Изменить имя файла", this, SLOT(changeName()));
-       myMenu.addAction("Удалить файл",  this, SLOT(eraseItem()));
-       myMenu.exec(globalPos);
 }
 MainWindow::~MainWindow()
 {
@@ -138,19 +93,20 @@ void MainWindow::on_ProjectTree_doubleClicked(const QModelIndex &index)
 {
     qDebug() << "on_ProjectTree_doubleClicked";
     ui->Status->showMessage("Открываем " + index.data().toString());
-    bool _Val = 0;
     for(size_t i=0;i<Tabs.size();i++)
     {
         if(Tabs[i]->filename==index.data().toString())
         {
-            _Val = 1;
+            for(int i=0;i<ui->Files->count();i++)
+                if(ui->Files->tabText(i)==index.data().toString())
+                {
+                    ui->Files->setCurrentIndex(i);
+                    break;
+                }
+            ui->Status->showMessage("Произошла ошибка. Данный файл уже открыт.",7500);
+            return;
             break;
         }
-    }
-    if(_Val)
-    {
-        ui->Status->showMessage("Произошла ошибка. Данный файл уже открыт.",7500);
-        return;
     }
     QString x = index.data().toString();
     auto list = project->GFPaN();
@@ -184,7 +140,6 @@ void MainWindow::on_Files_tabCloseRequested(int index)
         }
     if(!_Val)
         return;
-    ui->Files->removeTab(index);
     ui->Status->showMessage("Готово!",5000);
 }
 void MainWindow::on_CompilerOutput_tabCloseRequested(int index)
@@ -211,14 +166,99 @@ void MainWindow::on_VKDirectButton_clicked()
     QUrl vk("https://vk.com/im?sel=391846880");
     QDesktopServices::openUrl(vk);
 }
+void MainWindow::ShowContextMenu(QPoint position)
+{
+    if(project==nullptr) return;
+    now_pos = position;
+    QPoint globalPos = ui->ProjectTree->mapToGlobal(position);
+       QMenu myMenu;
+       myMenu.setStyleSheet(
+R"(QMenu {
+       background-color: #414243;
+       border: 1px solid #232425;
+   }
 
+   QMenu::item {
+       background-color: transparent;
+       color:#c1c1c1;
+       padding: 4px 8px;
+   }
+
+   QMenu::item:selected {
+       background-color: #6b6c6d;
+   })");
+       QMenu subMenu(&myMenu);
+       subMenu.setTitle("Добавить");
+       subMenu.setStyleSheet(
+R"(QMenu {
+       background-color: #414243;
+       border: 1px solid #232425;
+   }
+
+   QMenu::item {
+       background-color: transparent;
+       color:#c1c1c1;
+       padding: 4px 8px;
+   }
+
+   QMenu::item:selected {
+       background-color: #6b6c6d;
+   })");
+       subMenu.addAction("Создать папку", this, SLOT(AddFolder()));
+       subMenu.addAction("Создать файл FORTH", this, SLOT(AddFile()));
+       myMenu.addMenu(&subMenu);
+       myMenu.addSeparator();
+       myMenu.addAction("Изменить имя файла", this, SLOT(changeName()));
+       myMenu.addAction("Удалить файл",  this, SLOT(eraseItem()));
+       myMenu.exec(globalPos);
+}
 void MainWindow::AddFile()
 {
-
+    QString _Val = ui->ProjectTree->indexAt(now_pos).data().toString(), _Val2;
+    qDebug() << _Val;
+    if(_Val=="" || _Val.contains('.'))
+    {
+        ui->Status->showMessage("Вы должны выбрать папку,\n в которой будете создавать файл!",10000);
+        return;
+    }
+    QString filename;
+    ChangeNameWidget CNW(&filename);
+    CNW.show();
+    CNW.exec();
+    filename+=".forth";
+    auto Val = project->GFPaN();
+    for(size_t i=0;i<Val.size();i++)
+    {
+        if(Val[i].second==filename)
+        {
+            ui->Status->showMessage("Произошла ошибка. Данный файл существует!",10000);
+            return;
+        }
+    }
+    QFile file(project->ProjectFolder + _Val + "/" + filename);
+    file.open(QIODevice::WriteOnly);
+    file.close();
+    project->AddFile(project->ProjectFolder + _Val + "/" + filename);
+    LoadProjectTree();
 }
 void MainWindow::AddFolder()
 {
-
+    QString folder;
+    ChangeNameWidget CNW(&folder);
+    CNW.show();
+    CNW.exec();
+    if(folder=="")
+    {
+        ui->Status->showMessage("Произошла ошибка. Строка пуста!",10000);
+        return;
+    }
+    if(QDir(project->ProjectFolder+folder).exists())
+    {
+        ui->Status->showMessage("Произошла ошибка. Данная папка существует!",10000);
+        return;
+    }
+    QDir().mkdir(project->ProjectFolder+folder);
+    LoadProjectTree();
 }
 void MainWindow::changeName()
 {

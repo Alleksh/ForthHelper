@@ -31,6 +31,7 @@ public:
     void LoadProjectTree();
 private slots:
     void AddFile();
+
     void AddFolder();
 
     void changeName();

@@ -28,18 +28,21 @@ SOURCES += \
     tab.cpp \
     project.cpp \
     compiler.cpp \
-    editwordlistdialog.cpp
+    editwordlistdialog.cpp \
+    changenamewidget.cpp
 
 HEADERS += \
         mainwindow.h \
     project.h \
     tab.h \
     compiler.h \
-    editwordlistdialog.h
+    editwordlistdialog.h \
+    changenamewidget.h
 
 FORMS += \
         mainwindow.ui \
-    editwordlistdialog.ui
+    editwordlistdialog.ui \
+    changenamewidget.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

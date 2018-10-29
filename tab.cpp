@@ -98,7 +98,7 @@ CodeEditor::CodeEditor(QTextBrowser* ProblemsBar, Project* project, QString path
 
     this->QTbrowser->setText(compiler->GetErrorQString());
 
-    QCompleter* completer = new QCompleter(this);
+    QCompleter* completer = new QCompleter();
     completer->setModel(modelFromFile("words.cwl", completer));
     completer->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
     completer->setCaseSensitivity(Qt::CaseInsensitive);
@@ -291,8 +291,6 @@ void CodeEditor::keyPressEvent(QKeyEvent *e)
         c->complete(cr);
 }
 
-
-
 void CodeEditor::save()
 {
 saveBackup();
@@ -341,15 +339,18 @@ void CodeEditor::UpdateText()
     {
         saveBackup();
         CI=0;
-    }
+    }/*
     else if(CI%3==0)
     {
+        QCursor QC = this->cursor();
         auto Text = this->toPlainText();
         this->clear();
         this->appendHtml(compiler->DrawText(Text));
+        this->setCursor(QC);
         this->QTbrowser->setText(compiler->GetErrorQString());
         CI-=2;
-    }
+
+    }*/
     //else if(CI%25==0) UpdateCompleter();
 }
 void CodeEditor::UpdateCompleter()

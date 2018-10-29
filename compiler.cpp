@@ -2,7 +2,8 @@
 
 QString Compiler::GetLineStyle(QString word)
 {
-    if(word=="&nbsp;") return "<p>"  + word + "</p>";
+    if(word=="&nbsp;") return "<p>&nbsp;</p>";
+    if(word==" ") return "<p>&nbsp;</p>";
     return "<p>"  + word + "</p>";
 }
 QString Compiler::DrawText(QString _Val)
@@ -18,6 +19,8 @@ QString returnValue, buffer;
         buffer = "";
         }
         else  buffer+=_Val[i];
+    if(buffer!="")
+    returnValue+=GetLineStyle(buffer);
 return returnValue;
 }
 QString Compiler::GetErrorQString()
