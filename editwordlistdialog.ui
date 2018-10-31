@@ -22,7 +22,7 @@
   <property name="styleSheet">
    <string notr="true">
 
-QListWidget:QScrollBar:horizontal {
+ QScrollBar:horizontal {
                             color:#AFAFAF;
                         background-color:#2C2E2F;
                         }

@@ -1,34 +1,12 @@
 #include "compiler.h"
 
-QString Compiler::GetLineStyle(QString word)
-{
-    if(word=="&nbsp;") return "<p>&nbsp;</p>";
-    if(word==" ") return "<p>&nbsp;</p>";
-    return "<p>"  + word + "</p>";
-}
-QString Compiler::DrawText(QString _Val)
-{
-QString returnValue, buffer;
-    for(int i=0;i<_Val.size();i++)
-        if(_Val[i]=='\n')
-        {
-            if(i>1)
-                if((_Val[i-2]=='\n' && _Val[i-1]==' ') || (_Val[i-1]=='\n'))
-                    buffer+="&nbsp;";
-        returnValue+=GetLineStyle(buffer);
-        buffer = "";
-        }
-        else  buffer+=_Val[i];
-    if(buffer!="")
-    returnValue+=GetLineStyle(buffer);
-return returnValue;
-}
 QString Compiler::GetErrorQString()
 {
     return "";
 }
 bool Compiler::UpdateCompleter(QString pathToFile, QString Text)
 {
+    return 1;
     QString _Value;
     for(size_t i=0;i<WL.size();i++)
     {

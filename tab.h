@@ -14,6 +14,31 @@
 #include <QTextBrowser>
 #include "compiler.h"
 #include<QMessageBox>
+#include <QSyntaxHighlighter>
+class Highlighter : public QSyntaxHighlighter
+{
+    Q_OBJECT
+
+public:
+    Highlighter(QTextDocument *parent,QStringList,QStringList);
+
+protected:
+    void highlightBlock(const QString &text) override;
+
+private:
+    struct HighlightingRule
+    {
+        QRegularExpression pattern;
+        QTextCharFormat format;
+    };
+    QVector<HighlightingRule> highlightingRules;
+
+    QTextCharFormat keywordFormat;
+    QTextCharFormat classFormat;
+    QTextCharFormat LineCommentFormat;
+    QTextCharFormat quotationFormat;
+    QTextCharFormat functionFormat;
+};
 class CodeEditor : public QPlainTextEdit
 {
     Q_OBJECT
@@ -47,7 +72,10 @@ private:
     QWidget *lineNumberArea;
     QTextBrowser *QTbrowser;
     int CI = 0;
-};class LineNumberArea : public QWidget
+    Highlighter* now_highlighter;
+};
+
+class LineNumberArea : public QWidget
 {
 public:
     LineNumberArea(CodeEditor *editor) : QWidget(editor) {

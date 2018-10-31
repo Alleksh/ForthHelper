@@ -98,8 +98,6 @@ public:
     ~Compiler()
     {
     }
-    QString GetLineStyle(QString);
-    QString DrawText(QString);
     QString GetErrorQString();
     bool UpdateCompleter(QString, QString);
 };

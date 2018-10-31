@@ -86,7 +86,7 @@ CodeEditor::CodeEditor(QTextBrowser* ProblemsBar, Project* project, QString path
     file.open(QIODevice::ReadOnly);
         QTextStream qts(&file);
         QString Text = qts.readAll();
-        this->appendHtml(compiler->DrawText(Text));
+        this->setPlainText(Text);
     file.close();
 
     this->setLineWrapMode(LineWrapMode::NoWrap);
@@ -104,6 +104,11 @@ CodeEditor::CodeEditor(QTextBrowser* ProblemsBar, Project* project, QString path
     completer->setCaseSensitivity(Qt::CaseInsensitive);
     completer->setWrapAround(false);
     setCompleter(completer);
+    now_highlighter = new Highlighter(this->document(),{"", ""},{"", ""});
+    for(int i=0;i<200;i++)
+    {
+        qDebug() << c->completionModel()->index(i,0).data().toString() << " : " << c->completionModel()->index(i,0);
+    }
 }
 CodeEditor::~CodeEditor()
 
@@ -119,7 +124,56 @@ CodeEditor::~CodeEditor()
     delete compiler;
     delete c;
     delete lineNumberArea;
+    delete now_highlighter;
 }
+//Syntax highlight functions
+Highlighter::Highlighter(QTextDocument *parent, QStringList Variables, QStringList Functions)
+    : QSyntaxHighlighter(parent)
+{
+    HighlightingRule rule;
+
+    keywordFormat.setForeground(QBrush(QColor("#D47F51")));
+    keywordFormat.setFontWeight(QFont::Bold);
+    QStringList keywordPatterns;
+    keywordPatterns << "\\bVARIABLE\\b" << "\\bCONSTANT\\b";
+    foreach (const QString &pattern, keywordPatterns) {
+        rule.pattern = QRegularExpression(pattern);
+        rule.format = keywordFormat;
+        highlightingRules.append(rule);
+    }
+        classFormat.setFontWeight(QFont::Bold);
+      classFormat.setForeground(Qt::darkMagenta);
+      rule.pattern = QRegularExpression("\\bQ[A-Za-z]+\\b");
+      rule.format = classFormat;
+      highlightingRules.append(rule);
+
+      quotationFormat.setForeground(Qt::green);
+      rule.pattern = QRegularExpression(".\".*\"");
+      rule.format = quotationFormat;
+      highlightingRules.append(rule);
+
+      quotationFormat.setForeground(Qt::lightGray);
+      rule.pattern = QRegularExpression("#.*");
+      rule.format = quotationFormat;
+      highlightingRules.append(rule);
+
+      functionFormat.setFontItalic(true);
+      functionFormat.setForeground(Qt::blue);
+      rule.pattern = QRegularExpression("\\b[A-Za-z0-9_]+(?=\\()");
+      rule.format = functionFormat;
+      highlightingRules.append(rule);
+}
+void Highlighter::highlightBlock(const QString &text)
+{
+    foreach (const HighlightingRule &rule, highlightingRules) {
+        QRegularExpressionMatchIterator matchIterator = rule.pattern.globalMatch(text);
+        while (matchIterator.hasNext()) {
+            QRegularExpressionMatch match = matchIterator.next();
+            setFormat(match.capturedStart(), match.capturedLength(), rule.format);
+        }
+    }
+
+ }
 //Line number area functions
 int CodeEditor::lineNumberAreaWidth()
 {
@@ -130,13 +184,13 @@ int CodeEditor::lineNumberAreaWidth()
         ++digits;
     }
 
-    int space = 3 + fontMetrics().horizontalAdvance(QLatin1Char('9')) * digits;
+    int space = 10 + fontMetrics().horizontalAdvance(QLatin1Char('9')) * digits;
 
     return space;
 }
 void CodeEditor::updateLineNumberAreaWidth(int /* newBlockCount */)
 {
-    setViewportMargins(lineNumberAreaWidth(), 0, 0, 0);
+    setViewportMargins(lineNumberAreaWidth()+20, 0, 0, 0);
 }
 void CodeEditor::updateLineNumberArea(const QRect &rect, int dy)
 {
@@ -197,11 +251,10 @@ void CodeEditor::lineNumberAreaPaintEvent(QPaintEvent *event)
 
               block = block.next();
               top = bottom;
-              bottom = top + (int) blockBoundingRect(block).height();
+              bottom = top + int(blockBoundingRect(block).height());
               ++blockNumber;
           }
       }
-
 //Completer functions
 void CodeEditor::setCompleter(QCompleter *completer)
 {
@@ -211,8 +264,71 @@ void CodeEditor::setCompleter(QCompleter *completer)
     c = completer;
     if (!c)
         return;
-
     c->setWidget(this);
+    c->popup()->setFocusPolicy(Qt::ClickFocus);
+    c->popup()->setStyleSheet(
+   R"(
+       QScrollBar:horizontal {
+           color:#AFAFAF;
+       background-color:#2C2E2F;
+       }
+       QScrollBar::handle:horizontal {
+        border: 2px groove #6b6c6d;
+       border-radius:4px;
+       background-color:#2C2E2F;
+           color:#AFAFAF;
+           min-width: 30px;
+       }
+       QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
+           color:#c1c1c1;
+       background-color:#2C2E2F;
+       }
+       QScrollBar:vertical {
+           color:#AFAFAF;
+       background-color:#2C2E2F;
+        }
+        QScrollBar::handle:vertical {
+        border: 2px groove #6b6c6d;
+       border-radius:4px;
+       background-color:#2C2E2F;
+           color:#AFAFAF;
+            min-height: 30px;
+        }
+        QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+           background: #2C2E2F;
+        }
+
+
+    QListView
+    {
+        border-style: solid;
+        border-width: 2px;
+        border-color: #27292a;
+        background-color:#414243;
+    color:#c1c1c1;
+    }
+    QListView::item {
+        background-color:#4a4d4f;
+        border: 2px solid #4a4d4f;
+        min-width: 12px;
+        min-height: 12px;
+        padding: 4px;
+        padding-top: 2px;
+        padding-bottom:02px;
+        color:#c1c1c1;
+    }
+
+    QListView::item:selected {
+        border-color: #007ACC;
+        color:#FAFAFA;
+        background:#007ACC;
+    }
+    QListView::item:hover{
+        background-color: #6b6c6d;
+        border:#6b6c6d;
+        color:#c1c1c1;
+    }
+   )");
     c->setCompletionMode(QCompleter::PopupCompletion);
     c->setCaseSensitivity(Qt::CaseInsensitive);
     QObject::connect(c, SIGNAL(activated(QString)),
@@ -247,6 +363,7 @@ void CodeEditor::focusInEvent(QFocusEvent *e)
 }
 void CodeEditor::keyPressEvent(QKeyEvent *e)
 {
+    qDebug() << e->key() << " : " << e->text();
     if (c && c->popup()->isVisible()) {
        switch (e->key()) {
        case Qt::Key_Enter:
@@ -277,28 +394,39 @@ void CodeEditor::keyPressEvent(QKeyEvent *e)
         QString completionPrefix = textUnderCursor();
 
         if (!isShortcut && (hasModifier || e->text().isEmpty()|| completionPrefix.length() < 3
-                          || eow.contains(e->text().right(1)))) {
+                          || eow.contains(e->text().right(1))))
+        {
+            qDebug() << "Hidden because: 1. isShortcut: " << isShortcut
+                     << " 2. hasModifier: " << hasModifier << " 3.e->text().isEmpty(): " << e->text().isEmpty()
+                     << " 4. completionPrefix.length() < 3: " << (completionPrefix.length() < 3)
+                     << " 5. eow.contains(e->text().right(1))" << eow.contains(e->text().right(1));
             c->popup()->hide();
             return;
         }
-        if (completionPrefix != c->completionPrefix()) {
+        if (completionPrefix != c->completionPrefix())
+        {
             c->setCompletionPrefix(completionPrefix);
+            qDebug() << "Local completionPrefix: " << completionPrefix;
+            qDebug() << "completer completionPrefix: " << c->completionPrefix();
+            qDebug() << c->completionModel()->index(0,0);
+            qDebug() << completionPrefix;
             c->popup()->setCurrentIndex(c->completionModel()->index(0, 0));
         }
         QRect cr = cursorRect();
         cr.setWidth(c->popup()->sizeHintForColumn(0)
-                    + c->popup()->verticalScrollBar()->sizeHint().width());
+                    + c->popup()->verticalScrollBar()->sizeHint().width() + 10);
+        qDebug() << cr;
         c->complete(cr);
+        qDebug() << c->completionMode();
 }
-
 void CodeEditor::save()
 {
-saveBackup();
-QFile file(pathToFile);
-file.open(QIODevice::WriteOnly);
-QTextStream qts(&file);
-qts << this->toPlainText();
-file.close();
+    saveBackup();
+    QFile file(pathToFile);
+    file.open(QIODevice::WriteOnly);
+    QTextStream qts(&file);
+    qts << this->toPlainText();
+    file.close();
 }
 void CodeEditor::saveBackup()
 {
@@ -334,7 +462,6 @@ void CodeEditor::saveBackup()
 void CodeEditor::UpdateText()
 {
     CI++;
-    qDebug() << QString::number(CI);
     if(CI>=100)
     {
         saveBackup();
@@ -351,7 +478,7 @@ void CodeEditor::UpdateText()
         CI-=2;
 
     }*/
-    //else if(CI%25==0) UpdateCompleter();
+    else if(CI%25==0) UpdateCompleter();
 }
 void CodeEditor::UpdateCompleter()
 {
