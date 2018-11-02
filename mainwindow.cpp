@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "editwordlistdialog.h"
 #include "changenamewidget.h"
+#include "enterdialog.h"
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -188,7 +189,7 @@ R"(QMenu {
        background-color: #6b6c6d;
    })");
        QMenu subMenu(&myMenu);
-       subMenu.setTitle("Добавить");
+       subMenu.setTitle("Добавить   ");
        subMenu.setStyleSheet(
 R"(QMenu {
        background-color: #414243;
@@ -208,8 +209,8 @@ R"(QMenu {
        subMenu.addAction("Создать файл FORTH", this, SLOT(AddFile()));
        myMenu.addMenu(&subMenu);
        myMenu.addSeparator();
-       myMenu.addAction("Изменить имя файла", this, SLOT(changeName()));
-       myMenu.addAction("Удалить файл",  this, SLOT(eraseItem()));
+      //myMenu.addAction("Изменить имя файла", this, SLOT(changeName()));
+       myMenu.addAction("Удалить    ",  this, SLOT(eraseItem()));
        myMenu.exec(globalPos);
 }
 void MainWindow::AddFile()
@@ -270,12 +271,64 @@ void MainWindow::eraseItem()
 {
     QString _Val = ui->ProjectTree->indexAt(now_pos).data().toString(), _Val2;
     qDebug() << _Val;
-    if(_Val=="" || !_Val.contains('.'))
+    auto Val = project->GFPaN();
+    if(_Val=="")
     {
-        ui->Status->showMessage("Удалить можно только лишь файл!",10000);
+        ui->Status->showMessage("Произошла какая-то ошибка. Выбран неверный элемент.",10000);
         return;
     }
-    auto Val = project->GFPaN();
+    if(!_Val.contains('.'))
+    {
+        QString now_folder, pathToFolder;
+        std::vector<std::pair<QString,QString>> vector;
+        for(size_t i=0;i<Val.size();i++)
+        {
+            std::string folder, buffer = Val[i].first.toStdString();
+            for(size_t i = buffer.size()-1; i < buffer.size();i--)
+            {
+                if(buffer[i]=='/')
+                {
+                    buffer.erase(buffer.begin()+i);
+                    break;
+                }
+                else buffer.erase(buffer.begin()+i);
+            }
+            for(size_t i = buffer.size()-1; i < buffer.size();i--)
+            {
+                if(buffer[i]=='/')
+                    break;
+                else folder+= buffer[i];
+            }
+            std::reverse(folder.begin(), folder.end());
+            if(QString::fromStdString(folder)==_Val)
+            {
+                now_folder = QString::fromStdString(folder);
+                pathToFolder = QString::fromStdString(buffer);
+                vector.push_back(Val[i]);
+            }
+        }
+        for(size_t i=0;i<vector.size();i++)
+            qDebug() << vector[i].first << " : " << vector[i].second;
+        QString Value = "Вы уверены, что хотите удалить все файлы, находящиеся в данной папке?\n";
+        for(size_t i=0;i<vector.size();i++)
+            if(i==vector.size()-1)
+                    Value+=vector[i].second;
+            else    Value+=vector[i].second + ", ";
+        if(pathToFolder!="")
+        if(QMessageBox::question(nullptr,"Вы уверены?", Value)==65536)
+            return;
+        for(size_t i=0;i<vector.size();i++)
+        {
+            QFile::remove(vector[i].first);
+            project->RemoveFile(vector[i].first);
+        }
+        if(pathToFolder=="") pathToFolder=project->ProjectFolder+_Val;
+        qDebug() << pathToFolder;
+        if(!QDir(pathToFolder).removeRecursively())
+        ui->Status->showMessage("Произошла какая-то ошибка. Папку удалить не удалось.",10000);
+        LoadProjectTree();
+        return;
+    }
     for(size_t i=0;i<Val.size();i++)
     {
         if(Val[i].second==_Val)
@@ -295,4 +348,11 @@ void MainWindow::eraseItem()
         }
     }
     ui->Status->showMessage("Произошла какая-то ошибка. Файл удалить не удалось.",10000);
+}
+void MainWindow::on_Emulate_clicked()
+{
+    if(project==nullptr) return;
+    EnterDialog ED(project,this);
+    ED.show();
+    ED.exec();
 }

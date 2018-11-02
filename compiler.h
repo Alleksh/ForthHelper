@@ -1,6 +1,8 @@
 #ifndef COMPILER_H
 #define COMPILER_H
 #include "project.h"
+#include <thread>
+#include <mutex>
 struct Word
 {
 
@@ -29,14 +31,24 @@ struct Word
     {
         return StartWord==_Val;
     }
+
 };
+class Compiler;
+void CompilerThread(Compiler* compiler);
 class Compiler
 {
 public:
     std::vector<Word> WL;
     Project* project;
+    QString nowText,
+            ErrList;
+    std::vector<QStringList> WList;
+    std::mutex access;
+    bool close = 0;
     Compiler(Project* project)
     {
+        WList = new std::vector<QStringList>;
+        std::thread x(CompilerThread,this); x.detach();
         this->project = project;
         QFile file("words.txt");
         file.open(QIODevice::ReadOnly);
@@ -97,9 +109,12 @@ public:
     }
     ~Compiler()
     {
+        close = 1;
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
+    std::vector<QStringList> getWords();
     QString GetErrorQString();
-    bool UpdateCompleter(QString, QString);
+    bool UpdateCompleter(QString);
+    void UpdateCompiler(QString text);
 };
-
 #endif // COMPILER_H

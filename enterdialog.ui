@@ -1,0 +1,504 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>EnterDialog</class>
+ <widget class="QDialog" name="EnterDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1024</width>
+    <height>768</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>768</width>
+    <height>512</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">
+
+ QScrollBar:horizontal {
+                            color:#AFAFAF;
+                        background-color:#2C2E2F;
+                        }
+
+                        QScrollBar::handle:horizontal {
+
+                         border: 2px groove #6b6c6d;
+                        border-radius:4px;
+                        background-color:#2C2E2F;
+                            color:#AFAFAF;
+                            min-width: 40px;
+                        }
+
+                        QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
+                            color:#c1c1c1;
+                        background-color:#2C2E2F;
+                        }
+
+                        QScrollBar:vertical {
+                            color:#AFAFAF;
+                        background-color:#2C2E2F;
+                         }
+                         QScrollBar::handle:vertical {
+                         border: 2px groove #6b6c6d;
+                        border-radius:4px;
+                        background-color:#2C2E2F;
+                            color:#AFAFAF;
+                             min-height: 80px;
+                         }
+                         QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+                            background: #2C2E2F;
+                         }
+QDialog
+{background-color:#2C2E2F;
+}</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout_2">
+   <item row="0" column="0">
+    <layout class="QGridLayout" name="gridLayout">
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <item row="0" column="0">
+      <layout class="QHBoxLayout" name="horizontalLayout_4">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="label_2">
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">color:#c1c1c1;</string>
+           </property>
+           <property name="text">
+            <string>Список файлов:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QListWidget" name="leftList">
+           <property name="minimumSize">
+            <size>
+             <width>300</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>300</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QListWidget
+{
+	border-style: solid;
+	border-width: 2px;
+	border-color: #27292a;
+	background-color:#414243;
+}
+QListWidget::item {
+	background-color:#4a4d4f;
+ 	border: 2px solid #4a4d4f;
+    border-bottom-color: #4a4d4f; /* same as the pane color */
+    min-width: 12px;
+    min-height: 12px;
+    padding: 4px;
+    padding-top: 2px;
+	padding-bottom:02px;
+	color:#c1c1c1;
+}
+QListWidget::item:selected,
+QListWidget::item:hover {
+    background-color: #6b6c6d;
+	border:#6b6c6d;
+}</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_4">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <item>
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Fixed</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>483</width>
+             <height>17</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QLabel" name="label">
+           <property name="font">
+            <font>
+             <pointsize>14</pointsize>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">color:#c1c1c1;</string>
+           </property>
+           <property name="text">
+            <string>Чтобы добавить элемент,
+нажмите на него в левой панели.
+
+Нажмите на F10 для того,
+ чтобы приостановить/продолжить ввод.</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="label_3">
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">color:#c1c1c1;ы</string>
+           </property>
+           <property name="text">
+            <string>Список файлов для ввода:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QListWidget" name="rightList">
+           <property name="minimumSize">
+            <size>
+             <width>300</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>300</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QListWidget
+{
+	border-style: solid;
+	border-width: 2px;
+	border-color: #27292a;
+	background-color:#414243;
+}
+QListWidget::item {
+	background-color:#4a4d4f;
+ 	border: 2px solid #4a4d4f;
+    border-bottom-color: #4a4d4f; /* same as the pane color */
+    min-width: 12px;
+    min-height: 12px;
+    padding: 4px;
+    padding-top: 2px;
+	padding-bottom:02px;
+	color:#c1c1c1;
+}
+QListWidget::item:selected,
+QListWidget::item:hover {
+    background-color: #6b6c6d;
+	border:#6b6c6d;
+}</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+     <item row="1" column="0">
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <property name="spacing">
+        <number>4</number>
+       </property>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="label_4">
+           <property name="font">
+            <font>
+             <pointsize>14</pointsize>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">
+    spacing: 5px;
+	color: #c1c1c1;</string>
+           </property>
+           <property name="text">
+            <string>Задержка после нажатия на Enter:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="lineEdit">
+           <property name="styleSheet">
+            <string notr="true">QLineEdit
+{
+    border-style: solid;
+    border-width: 1px;
+    border-color: #27292a;
+    color:#d1d1d1;
+	background-color:#414243;
+    padding: 6px 10px;
+}QMenu {
+    background-color: #414243; /* sets background of the menu */
+    border: 1px solid #232425;
+}
+
+QMenu::item {
+    /* sets background of menu item. set this to something non-transparent
+        if you want menu color and menu item color to be different */
+    background-color: transparent;
+    color:#c1c1c1;
+    padding: 5px 8px;
+	padding-right:40px;
+}
+
+QMenu::item:selected { /* when user selects item using mouse or keyboard */
+    background-color: #6b6c6d;
+}</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <item>
+          <widget class="QLabel" name="label_6">
+           <property name="font">
+            <font>
+             <pointsize>14</pointsize>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">
+    spacing: 5px;
+	color: #c1c1c1;</string>
+           </property>
+           <property name="text">
+            <string>Задерка после нажатия на клавишу</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="lineEdit_3">
+           <property name="styleSheet">
+            <string notr="true">QLineEdit
+{
+    border-style: solid;
+    border-width: 1px;
+    border-color: #27292a;
+    color:#d1d1d1;
+	background-color:#414243;
+    padding: 6px 10px;
+}QMenu {
+    background-color: #414243; /* sets background of the menu */
+    border: 1px solid #232425;
+}
+
+QMenu::item {
+    /* sets background of menu item. set this to something non-transparent
+        if you want menu color and menu item color to be different */
+    background-color: transparent;
+    color:#c1c1c1;
+    padding: 5px 8px;
+	padding-right:40px;
+}
+
+QMenu::item:selected { /* when user selects item using mouse or keyboard */
+    background-color: #6b6c6d;
+}</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <item>
+          <widget class="QLabel" name="label_5">
+           <property name="font">
+            <font>
+             <pointsize>14</pointsize>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">
+    spacing: 5px;
+	color: #c1c1c1;</string>
+           </property>
+           <property name="text">
+            <string>Через сколько миллисекунд начать ввод?</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="lineEdit_2">
+           <property name="styleSheet">
+            <string notr="true">QLineEdit
+{
+    border-style: solid;
+    border-width: 1px;
+    border-color: #27292a;
+    color:#d1d1d1;
+	background-color:#414243;
+    padding: 6px 10px;
+}QMenu {
+    background-color: #414243; /* sets background of the menu */
+    border: 1px solid #232425;
+}
+
+QMenu::item {
+    /* sets background of menu item. set this to something non-transparent
+        if you want menu color and menu item color to be different */
+    background-color: transparent;
+    color:#c1c1c1;
+    padding: 5px 8px;
+	padding-right:40px;
+}
+
+QMenu::item:selected { /* when user selects item using mouse or keyboard */
+    background-color: #6b6c6d;
+}</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+   <item row="1" column="0">
+    <layout class="QHBoxLayout" name="horizontalLayout_6">
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_5">
+       <item>
+        <widget class="QLabel" name="label_7">
+         <property name="styleSheet">
+          <string notr="true">color:#c1c1c1;</string>
+         </property>
+         <property name="text">
+          <string>Статус:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="Status">
+         <property name="minimumSize">
+          <size>
+           <width>100</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="start">
+       <property name="styleSheet">
+        <string notr="true">QPushButton{
+    border-style: solid;
+    border-width: 1px;
+    border-color: #27292a;
+    color:#c1c1c1;
+	background-color:#414243;
+	padding:10px 15px;
+}
+QPushButton::pressed {
+    background-color: #6b6c6d;
+    border-style: inset;
+}</string>
+       </property>
+       <property name="text">
+        <string>Запустить</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="cancel">
+       <property name="styleSheet">
+        <string notr="true">QPushButton{
+    border-style: solid;
+    border-width: 1px;
+    border-color: #27292a;
+    color:#c1c1c1;
+	background-color:#414243;
+	padding:10px 15px;
+}
+QPushButton::pressed {
+    background-color: #6b6c6d;
+    border-style: inset;
+}</string>
+       </property>
+       <property name="text">
+        <string>Отмена</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

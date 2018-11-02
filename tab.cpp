@@ -26,6 +26,7 @@ CodeEditor::CodeEditor(QTextBrowser* ProblemsBar, Project* project, QString path
 {
     qDebug() << "Creating tab. pathToFile: " + pathToFile << "Filename: "  + filename;
     lineNumberArea = new LineNumberArea(this);
+    compiler = new Compiler(project);
     connect(this, SIGNAL(textChanged()), this, SLOT(UpdateText()));
     connect(this, SIGNAL(blockCountChanged(int)), this, SLOT(updateLineNumberAreaWidth(int)));
     connect(this, SIGNAL(updateRequest(QRect,int)), this, SLOT(updateLineNumberArea(QRect,int)));
@@ -76,7 +77,6 @@ CodeEditor::CodeEditor(QTextBrowser* ProblemsBar, Project* project, QString path
     this->pathToFile = pathToFile;
     this->filename = filename;
     this->QTbrowser = ProblemsBar;
-    compiler = new Compiler(project);
 
     QFile File(filename + ".cwl");
     File.open(QIODevice::WriteOnly);
@@ -104,11 +104,9 @@ CodeEditor::CodeEditor(QTextBrowser* ProblemsBar, Project* project, QString path
     completer->setCaseSensitivity(Qt::CaseInsensitive);
     completer->setWrapAround(false);
     setCompleter(completer);
-    now_highlighter = new Highlighter(this->document(),{"", ""},{"", ""});
-    for(int i=0;i<200;i++)
-    {
-        qDebug() << c->completionModel()->index(i,0).data().toString() << " : " << c->completionModel()->index(i,0);
-    }
+    std::vector<QStringList> val;
+    now_highlighter = new Highlighter(this->document(),val);
+    compiler->UpdateCompiler(this->toPlainText());
 }
 CodeEditor::~CodeEditor()
 
@@ -127,40 +125,38 @@ CodeEditor::~CodeEditor()
     delete now_highlighter;
 }
 //Syntax highlight functions
-Highlighter::Highlighter(QTextDocument *parent, QStringList Variables, QStringList Functions)
+Highlighter::Highlighter(QTextDocument *parent, std::vector<QStringList> vector)
     : QSyntaxHighlighter(parent)
 {
     HighlightingRule rule;
+    errors.setFontUnderline(1);
+    errors.setUnderlineColor(Qt::red);
+    rule.pattern = QRegularExpression("[A-Za-z0-9]");
+    rule.format = errors;
+    highlightingRules.append(rule);
 
-    keywordFormat.setForeground(QBrush(QColor("#D47F51")));
-    keywordFormat.setFontWeight(QFont::Bold);
+    integers.setForeground(QBrush(QColor("#ADD8E6")));
+    rule.pattern = QRegularExpression("[0-9]");
+    rule.format = integers;
+    highlightingRules.append(rule);
+
+    keywords.setForeground(QBrush(QColor("#D47F51")));
+    keywords.setFontWeight(QFont::Bold);
     QStringList keywordPatterns;
     keywordPatterns << "\\bVARIABLE\\b" << "\\bCONSTANT\\b";
     foreach (const QString &pattern, keywordPatterns) {
         rule.pattern = QRegularExpression(pattern);
-        rule.format = keywordFormat;
+        rule.format = keywords;
         highlightingRules.append(rule);
     }
-        classFormat.setFontWeight(QFont::Bold);
-      classFormat.setForeground(Qt::darkMagenta);
-      rule.pattern = QRegularExpression("\\bQ[A-Za-z]+\\b");
-      rule.format = classFormat;
-      highlightingRules.append(rule);
-
-      quotationFormat.setForeground(Qt::green);
+      strings.setForeground(Qt::green);
       rule.pattern = QRegularExpression(".\".*\"");
-      rule.format = quotationFormat;
+      rule.format = strings;
       highlightingRules.append(rule);
 
-      quotationFormat.setForeground(Qt::lightGray);
+      comments.setForeground(Qt::lightGray);
       rule.pattern = QRegularExpression("#.*");
-      rule.format = quotationFormat;
-      highlightingRules.append(rule);
-
-      functionFormat.setFontItalic(true);
-      functionFormat.setForeground(Qt::blue);
-      rule.pattern = QRegularExpression("\\b[A-Za-z0-9_]+(?=\\()");
-      rule.format = functionFormat;
+      rule.format = comments;
       highlightingRules.append(rule);
 }
 void Highlighter::highlightBlock(const QString &text)
@@ -363,7 +359,6 @@ void CodeEditor::focusInEvent(QFocusEvent *e)
 }
 void CodeEditor::keyPressEvent(QKeyEvent *e)
 {
-    qDebug() << e->key() << " : " << e->text();
     if (c && c->popup()->isVisible()) {
        switch (e->key()) {
        case Qt::Key_Enter:
@@ -396,28 +391,18 @@ void CodeEditor::keyPressEvent(QKeyEvent *e)
         if (!isShortcut && (hasModifier || e->text().isEmpty()|| completionPrefix.length() < 3
                           || eow.contains(e->text().right(1))))
         {
-            qDebug() << "Hidden because: 1. isShortcut: " << isShortcut
-                     << " 2. hasModifier: " << hasModifier << " 3.e->text().isEmpty(): " << e->text().isEmpty()
-                     << " 4. completionPrefix.length() < 3: " << (completionPrefix.length() < 3)
-                     << " 5. eow.contains(e->text().right(1))" << eow.contains(e->text().right(1));
             c->popup()->hide();
             return;
         }
         if (completionPrefix != c->completionPrefix())
         {
             c->setCompletionPrefix(completionPrefix);
-            qDebug() << "Local completionPrefix: " << completionPrefix;
-            qDebug() << "completer completionPrefix: " << c->completionPrefix();
-            qDebug() << c->completionModel()->index(0,0);
-            qDebug() << completionPrefix;
             c->popup()->setCurrentIndex(c->completionModel()->index(0, 0));
         }
         QRect cr = cursorRect();
         cr.setWidth(c->popup()->sizeHintForColumn(0)
                     + c->popup()->verticalScrollBar()->sizeHint().width() + 10);
-        qDebug() << cr;
         c->complete(cr);
-        qDebug() << c->completionMode();
 }
 void CodeEditor::save()
 {
@@ -466,23 +451,19 @@ void CodeEditor::UpdateText()
     {
         saveBackup();
         CI=0;
-    }/*
-    else if(CI%3==0)
+    }
+    else if(CI%5==0)
     {
-        QCursor QC = this->cursor();
-        auto Text = this->toPlainText();
-        this->clear();
-        this->appendHtml(compiler->DrawText(Text));
-        this->setCursor(QC);
-        this->QTbrowser->setText(compiler->GetErrorQString());
-        CI-=2;
-
-    }*/
-    else if(CI%25==0) UpdateCompleter();
+        delete now_highlighter;
+        now_highlighter = new Highlighter(this->document(),compiler->getWords());
+        compiler->UpdateCompiler(this->toPlainText());
+        if(CI%3==0)
+            UpdateCompleter();
+    }
 }
 void CodeEditor::UpdateCompleter()
 {
-    if(!compiler->UpdateCompleter("words.cwl",this->toPlainText())) return;
+    if(!compiler->UpdateCompleter("words.cwl")) return;
     QCompleter* completer = new QCompleter(this);
     completer->setModel(modelFromFile("words.cwl", completer));
     completer->setModelSorting(QCompleter::CaseInsensitivelySortedModel);

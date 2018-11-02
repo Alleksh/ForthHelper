@@ -9,65 +9,7 @@ EditWordListDialog::EditWordListDialog(QWidget *parent) :
     ui->GiveIntegers->setValidator( new QIntValidator(0, 100, this) );
     ui->NeedIntegers->setValidator( new QIntValidator(0, 100, this) );
     ui->StartWord->setValidator(new QRegExpValidator(QRegExp("^\\S+$")));
-    setWindowTitle("Изменить словарь");/*
-    QFile file("words.txt");
-    file.open(QIODevice::ReadOnly);
-    QTextStream qts(&file);
-    while(!qts.atEnd())
-    {
-        Word word;
-        if(qts.atEnd()) break;
-        QString str = qts.readLine();
-        word.StartWord = str;
-        ui->list->addItem(str);
-        if(qts.atEnd()) break;
-        str = qts.readLine();
-        word.EndWords = str;
-        if(qts.atEnd()) break;
-        str = qts.readLine();
-        word.NeedNumbers = str.toInt();
-        if(qts.atEnd()) break;
-        str = qts.readLine();
-        word.GiveNumbers = str.toInt();
-        if(qts.atEnd()) break;
-        str = qts.readLine();
-        word.VF = str.toInt();
-        if(qts.atEnd()) break;
-        str = qts.readLine();
-        word.one_word = str.toInt();
-        if(qts.atEnd()) break;
-        str = qts.readLine();
-        word.StartAndEndWordInOneLine = str.toInt();
-        if(qts.atEnd()) break;
-        str = qts.readLine();
-        word.CreatesNewWord = str.toInt();
-        if(qts.atEnd()) break;
-        std::string Str = qts.readLine().toStdString();
-        for(size_t i=0;i<Str.size();i++)
-        if(i!=0)
-        if(Str[i-1]=='%')
-        {
-            if(i!=1)
-            {
-                if(Str[i-2]=='%')
-                {
-                    Str.erase((Str.begin() + int(i)) -1);
-                    continue;
-                }
-            }
-            if(Str[i]=='#')
-            {
-                Str[i]='\n';
-                Str.erase((Str.begin() + int(i)) -1);
-            }
-            else if(Str[i]=='%')
-                Str.erase((Str.begin() + int(i)) -1);
-        }
-        word.description = QString::fromStdString(Str);
-        WL.push_back(word);
-    }
-    file.close();
-    ui->list->sortItems(Qt::SortOrder::AscendingOrder);*/
+    setWindowTitle("Изменить словарь");
     on_Reload_clicked();
     ui->list->setFocusPolicy(Qt::NoFocus);
     ui->list->setContextMenuPolicy(Qt::CustomContextMenu);

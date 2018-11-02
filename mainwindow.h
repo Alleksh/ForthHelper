@@ -56,6 +56,8 @@ private slots:
 
     void on_VKDirectButton_clicked();
 
+    void on_Emulate_clicked();
+
 private:
     Ui::MainWindow *ui;
 };

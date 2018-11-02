@@ -20,7 +20,7 @@ class Highlighter : public QSyntaxHighlighter
     Q_OBJECT
 
 public:
-    Highlighter(QTextDocument *parent,QStringList,QStringList);
+    Highlighter(QTextDocument *parent,std::vector<QStringList>);
 
 protected:
     void highlightBlock(const QString &text) override;
@@ -33,11 +33,13 @@ private:
     };
     QVector<HighlightingRule> highlightingRules;
 
-    QTextCharFormat keywordFormat;
-    QTextCharFormat classFormat;
-    QTextCharFormat LineCommentFormat;
-    QTextCharFormat quotationFormat;
-    QTextCharFormat functionFormat;
+    QTextCharFormat comments,
+                    functions,
+                    variables,
+                    strings,
+                    keywords,
+                    errors,
+                    integers;
 };
 class CodeEditor : public QPlainTextEdit
 {

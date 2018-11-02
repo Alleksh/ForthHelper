@@ -165,13 +165,13 @@ QToolButton::pressed {
 }</string>
             </property>
             <property name="text">
-             <string>Проверить код
-на ошибки</string>
+             <string>Проверить весь
+проект на ошибки</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QToolButton" name="EnterCodeInConsole">
+           <widget class="QToolButton" name="Emulate">
             <property name="minimumSize">
              <size>
               <width>90</width>
@@ -193,8 +193,8 @@ QToolButton::pressed {
 }</string>
             </property>
             <property name="text">
-             <string>Ввести код 
-в консоль</string>
+             <string>Эмулировать
+ввод</string>
             </property>
            </widget>
           </item>
@@ -292,116 +292,6 @@ QPushButton:default {
          </spacer>
         </item>
        </layout>
-      </item>
-      <item row="1" column="0">
-       <widget class="QTabWidget" name="Files">
-        <property name="styleSheet">
-         <string notr="true">QTabWidget::pane { /* The tab widget frame */
-
-    border-top: 2px solid #007ACC;
-	border-bottom: 1px solid #232425;
-	border-left:1px solid #232425;
-}
-
-QTabWidget::tab-bar {
-    left: 5px; /* move to the right by 5px */
-}
-
-/* Style the tab using the tab sub-control. Note that
-    it reads QTabBar _not_ QTabWidget */
-QTabBar::tab {
-background-color:#4a4d4f;
- border: 2px solid #4a4d4f;
-    border-bottom-color: #4a4d4f; /* same as the pane color */
-    min-width: 12px;
-    min-height: 12px;
-    padding: 4px;
-    padding-top: 2px;
-	padding-bottom:02px;
-}
-
-QTabBar::tab:hover {
-
-    background-color: #6b6c6d;
-	border:#6b6c6d;
-}
-
-QTabBar::tab:selected {
-    border-color: #007ACC;
-    color:#FAFAFA;
-	background:#007ACC;
-}
-
-QTabBar::tab:!selected {
-color:#c1c1c1;
-}
-QTabBar::close-button {
-image: url(:/images/close.png); padding: 3px;
-} 
-QTabBar::close-button:hover { image: url(:/images/close-hover.png); padding: 3px; }</string>
-        </property>
-        <property name="tabPosition">
-         <enum>QTabWidget::North</enum>
-        </property>
-        <property name="tabShape">
-         <enum>QTabWidget::Rounded</enum>
-        </property>
-        <property name="currentIndex">
-         <number>0</number>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>4</width>
-          <height>4</height>
-         </size>
-        </property>
-        <property name="elideMode">
-         <enum>Qt::ElideMiddle</enum>
-        </property>
-        <property name="tabsClosable">
-         <bool>true</bool>
-        </property>
-        <property name="movable">
-         <bool>true</bool>
-        </property>
-        <widget class="QWidget" name="tab_3">
-         <property name="styleSheet">
-          <string notr="true">
-QTabBar::close-button { image: url(qrc:/close.jpg) subcontrol-position: left; } 
-QTabBar::close-button:hover { image: url(qrc:/close-hover.jpg) }</string>
-         </property>
-         <attribute name="title">
-          <string>Tab 1</string>
-         </attribute>
-        </widget>
-        <widget class="QWidget" name="tab_4">
-         <property name="styleSheet">
-          <string notr="true">
-QTabBar::close-button { image: url(qrc:/close.jpg) subcontrol-position: left; } 
-QTabBar::close-button:hover { image: url(qrc:/close-hover.jpg) }</string>
-         </property>
-         <attribute name="title">
-          <string>Tab 2</string>
-         </attribute>
-         <layout class="QGridLayout" name="gridLayout_2">
-          <property name="leftMargin">
-           <number>0</number>
-          </property>
-          <property name="topMargin">
-           <number>0</number>
-          </property>
-          <property name="rightMargin">
-           <number>0</number>
-          </property>
-          <property name="bottomMargin">
-           <number>0</number>
-          </property>
-          <property name="spacing">
-           <number>0</number>
-          </property>
-         </layout>
-        </widget>
-       </widget>
       </item>
       <item row="2" column="0">
        <widget class="QTabWidget" name="CompilerOutput">
@@ -538,6 +428,116 @@ QTextBrowser
          <attribute name="title">
           <string>Вывод анализатора проекта</string>
          </attribute>
+        </widget>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QTabWidget" name="Files">
+        <property name="styleSheet">
+         <string notr="true">QTabWidget::pane { /* The tab widget frame */
+
+    border-top: 2px solid #007ACC;
+	border-bottom: 1px solid #232425;
+	border-left:1px solid #232425;
+}
+
+QTabWidget::tab-bar {
+    left: 5px; /* move to the right by 5px */
+}
+
+/* Style the tab using the tab sub-control. Note that
+    it reads QTabBar _not_ QTabWidget */
+QTabBar::tab {
+background-color:#4a4d4f;
+ border: 2px solid #4a4d4f;
+    border-bottom-color: #4a4d4f; /* same as the pane color */
+    min-width: 12px;
+    min-height: 12px;
+    padding: 4px;
+    padding-top: 2px;
+	padding-bottom:02px;
+}
+
+QTabBar::tab:hover {
+
+    background-color: #6b6c6d;
+	border:#6b6c6d;
+}
+
+QTabBar::tab:selected {
+    border-color: #007ACC;
+    color:#FAFAFA;
+	background:#007ACC;
+}
+
+QTabBar::tab:!selected {
+color:#c1c1c1;
+}
+QTabBar::close-button {
+image: url(:/images/close.png); padding: 3px;
+} 
+QTabBar::close-button:hover { image: url(:/images/close-hover.png); padding: 3px; }</string>
+        </property>
+        <property name="tabPosition">
+         <enum>QTabWidget::North</enum>
+        </property>
+        <property name="tabShape">
+         <enum>QTabWidget::Rounded</enum>
+        </property>
+        <property name="currentIndex">
+         <number>0</number>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>4</width>
+          <height>4</height>
+         </size>
+        </property>
+        <property name="elideMode">
+         <enum>Qt::ElideMiddle</enum>
+        </property>
+        <property name="tabsClosable">
+         <bool>true</bool>
+        </property>
+        <property name="movable">
+         <bool>true</bool>
+        </property>
+        <widget class="QWidget" name="tab_3">
+         <property name="styleSheet">
+          <string notr="true">
+QTabBar::close-button { image: url(qrc:/close.jpg) subcontrol-position: left; } 
+QTabBar::close-button:hover { image: url(qrc:/close-hover.jpg) }</string>
+         </property>
+         <attribute name="title">
+          <string>Tab 1</string>
+         </attribute>
+        </widget>
+        <widget class="QWidget" name="tab_4">
+         <property name="styleSheet">
+          <string notr="true">
+QTabBar::close-button { image: url(qrc:/close.jpg) subcontrol-position: left; } 
+QTabBar::close-button:hover { image: url(qrc:/close-hover.jpg) }</string>
+         </property>
+         <attribute name="title">
+          <string>Tab 2</string>
+         </attribute>
+         <layout class="QGridLayout" name="gridLayout_2">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <property name="spacing">
+           <number>0</number>
+          </property>
+         </layout>
         </widget>
        </widget>
       </item>
