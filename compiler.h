@@ -47,7 +47,6 @@ public:
     bool close = 0;
     Compiler(Project* project)
     {
-        WList = new std::vector<QStringList>;
         std::thread x(CompilerThread,this); x.detach();
         this->project = project;
         QFile file("words.txt");
@@ -106,6 +105,7 @@ public:
             WL.push_back(word);
         }
         file.close();
+        std::this_thread::sleep_for(std::chrono::milliseconds(250));
     }
     ~Compiler()
     {

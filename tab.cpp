@@ -11,7 +11,8 @@ QAbstractItemModel *modelFromFile(const QString& fileName, QCompleter *completer
    #endif
        QStringList words;
 
-       while (!file.atEnd()) {
+       while (!file.atEnd())
+       {
            QByteArray line = file.readLine();
            if (!line.isEmpty())
                words << line.trimmed();
@@ -88,6 +89,7 @@ CodeEditor::CodeEditor(QTextBrowser* ProblemsBar, Project* project, QString path
         QString Text = qts.readAll();
         this->setPlainText(Text);
     file.close();
+    compiler->UpdateCompiler(this->toPlainText());
 
     this->setLineWrapMode(LineWrapMode::NoWrap);
     QFont font("Consolas",16);
@@ -104,12 +106,9 @@ CodeEditor::CodeEditor(QTextBrowser* ProblemsBar, Project* project, QString path
     completer->setCaseSensitivity(Qt::CaseInsensitive);
     completer->setWrapAround(false);
     setCompleter(completer);
-    std::vector<QStringList> val;
-    now_highlighter = new Highlighter(this->document(),val);
-    compiler->UpdateCompiler(this->toPlainText());
+    now_highlighter = new Highlighter(this->document(),compiler->getWords());
 }
 CodeEditor::~CodeEditor()
-
 {
     QFile file(pathToFile);
     file.open(QIODevice::ReadOnly);
@@ -119,10 +118,10 @@ CodeEditor::~CodeEditor()
     save();
     file.close();
 
-    delete compiler;
     delete c;
     delete lineNumberArea;
     delete now_highlighter;
+    delete compiler;
 }
 //Syntax highlight functions
 Highlighter::Highlighter(QTextDocument *parent, std::vector<QStringList> vector)
@@ -130,46 +129,115 @@ Highlighter::Highlighter(QTextDocument *parent, std::vector<QStringList> vector)
 {
     HighlightingRule rule;
     errors.setFontUnderline(1);
+    errors.setForeground(QBrush(QColor("#d3d3d3")));
     errors.setUnderlineColor(Qt::red);
-    rule.pattern = QRegularExpression("[A-Za-z0-9]");
+    rule.pattern = QRegularExpression("\\w+");
     rule.format = errors;
     highlightingRules.append(rule);
 
     integers.setForeground(QBrush(QColor("#ADD8E6")));
-    rule.pattern = QRegularExpression("[0-9]");
+    rule.pattern = QRegularExpression("\\d+");
     rule.format = integers;
     highlightingRules.append(rule);
 
-    keywords.setForeground(QBrush(QColor("#D47F51")));
-    keywords.setFontWeight(QFont::Bold);
-    QStringList keywordPatterns;
-    keywordPatterns << "\\bVARIABLE\\b" << "\\bCONSTANT\\b";
-    foreach (const QString &pattern, keywordPatterns) {
+    //Common words
+        keywords.setForeground(QBrush(QColor("#fafafa")));
+        keywords.setFontWeight(QFont::Bold);
+        QStringList keywordPatterns;
+        keywordPatterns << vector[0];
+        foreach (const QString &pattern, keywordPatterns)
+        {
+            QString x;
+            for(int i=0;i<pattern.size();i++)
+            {
+                if(     pattern[i]=='.'||   pattern[i]=='*' ||
+                        pattern[i]=='^' ||  pattern[i]=='-' ||
+                        pattern[i]=='\\' ||
+                        pattern[i]=='$' ||  pattern[i]=='?')
+                        x+= "\\";
+             x+= pattern[i];
+            }
+            x="\\b((\\s?)" + x + "(\\s?))\\b";
+            rule.pattern = QRegularExpression(x);
+            rule.format = keywords;
+            highlightingRules.append(rule);
+        }
+    //Word-creators( VARIABLE, CONSTANT, : )
+    keywordPatterns.clear();
+    keywordPatterns << vector[1] << ":";
+    keywords.setForeground(QBrush(QColor("#c3a6f0")));
+    foreach (const QString &pattern, keywordPatterns)
+    {
+        QString x = pattern + " (\\S)*";
+        rule.pattern = QRegularExpression(x);
+        rule.format = keywords;
+        highlightingRules.append(rule);
+    }
+    keywords.setForeground(QBrush(QColor("#B27300")));
+    foreach (const QString &pattern, keywordPatterns)
+    {
+
         rule.pattern = QRegularExpression(pattern);
         rule.format = keywords;
         highlightingRules.append(rule);
     }
-      strings.setForeground(Qt::green);
-      rule.pattern = QRegularExpression(".\".*\"");
+//if/then, do/loop, begin/again...
+    keywordPatterns.clear();
+    keywordPatterns << vector[2] << "IF\nTHEN";
+    keywords.setForeground(QBrush(QColor("#c4c52d")));
+    foreach (const QString &pattern, keywordPatterns)
+    {
+        QStringList Values;
+        QString fWord;
+        QStringList secondWords;
+        int i=0;
+            while(i<pattern.size()&&pattern[i]!='\n')
+            {
+                fWord+=pattern[i];
+                i++;
+            }
+            while(i<pattern.size())
+            {
+                QString nWord;
+                while(i<pattern.size() && pattern[i]!=' ')
+                {
+                    nWord+=pattern[i];
+                    i++;
+                }
+                secondWords << nWord;
+                i++;
+            }
+        for(int i=0;i<secondWords.size();i++)
+        Values << "/(("+fWord+")(?:(?!"+fWord+"|"+secondWords[i]+")[\\w\\s]|(?1))*("+secondWords[i]+":))/gm";
+        foreach (const QString &pattern, Values)
+        {
+            rule.pattern = QRegularExpression(pattern);
+            rule.format = keywords;
+            highlightingRules.append(rule);
+        }
+    }
+      strings.setForeground(QBrush(QColor("#568e56")));
+      rule.pattern = QRegularExpression("\\.\".*\"");
       rule.format = strings;
       highlightingRules.append(rule);
 
-      comments.setForeground(Qt::lightGray);
+      comments.setForeground(QBrush(QColor("#7e7e7e")));
       rule.pattern = QRegularExpression("#.*");
       rule.format = comments;
       highlightingRules.append(rule);
 }
 void Highlighter::highlightBlock(const QString &text)
 {
-    foreach (const HighlightingRule &rule, highlightingRules) {
+    foreach (const HighlightingRule &rule, highlightingRules)
+    {
         QRegularExpressionMatchIterator matchIterator = rule.pattern.globalMatch(text);
-        while (matchIterator.hasNext()) {
+        while (matchIterator.hasNext())
+        {
             QRegularExpressionMatch match = matchIterator.next();
             setFormat(match.capturedStart(), match.capturedLength(), rule.format);
         }
     }
-
- }
+}
 //Line number area functions
 int CodeEditor::lineNumberAreaWidth()
 {
@@ -209,7 +277,8 @@ void CodeEditor::highlightCurrentLine()
 {
     QList<QTextEdit::ExtraSelection> extraSelections;
 
-    if (!isReadOnly()) {
+    if (!isReadOnly())
+    {
         QTextEdit::ExtraSelection selection;
 
         QColor lineColor = QColor("#565758");
@@ -236,8 +305,10 @@ void CodeEditor::lineNumberAreaPaintEvent(QPaintEvent *event)
        int blockNumber = block.blockNumber();
        int top = int (blockBoundingGeometry(block).translated(contentOffset()).top());
        int bottom = top + int(blockBoundingRect(block).height());
-       while (block.isValid() && top <= event->rect().bottom()) {
-              if (block.isVisible() && bottom >= event->rect().top()) {
+       while (block.isValid() && top <= event->rect().bottom())
+       {
+              if (block.isVisible() && bottom >= event->rect().top())
+              {
                   QString number = QString::number(blockNumber + 1);
                   painter.setPen(otherColor);
                   painter.drawText(0, top, lineNumberArea->width(), fontMetrics().height(),
@@ -254,6 +325,7 @@ void CodeEditor::lineNumberAreaPaintEvent(QPaintEvent *event)
 //Completer functions
 void CodeEditor::setCompleter(QCompleter *completer)
 {
+    qDebug() << "setCompleter Called";
     if (c)
         QObject::disconnect(c, nullptr, this, nullptr);
 
@@ -359,8 +431,10 @@ void CodeEditor::focusInEvent(QFocusEvent *e)
 }
 void CodeEditor::keyPressEvent(QKeyEvent *e)
 {
-    if (c && c->popup()->isVisible()) {
-       switch (e->key()) {
+    if (c && c->popup()->isVisible())
+    {
+       switch (e->key())
+       {
        case Qt::Key_Enter:
        case Qt::Key_Return:
        case Qt::Key_Escape:
@@ -454,9 +528,12 @@ void CodeEditor::UpdateText()
     }
     else if(CI%5==0)
     {
-        delete now_highlighter;
-        now_highlighter = new Highlighter(this->document(),compiler->getWords());
-        compiler->UpdateCompiler(this->toPlainText());
+        if(CI%4==0)
+        {
+            delete now_highlighter;
+            now_highlighter = new Highlighter(this->document(),compiler->getWords());
+            compiler->UpdateCompiler(this->toPlainText());
+        }
         if(CI%3==0)
             UpdateCompleter();
     }

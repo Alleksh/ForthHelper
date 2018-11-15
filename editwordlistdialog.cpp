@@ -152,7 +152,6 @@ EditWordListDialog::~EditWordListDialog()
 }
 void EditWordListDialog::Load(size_t id)
 {
-    WL[NOW_ID].VF = 1;
     ui->EndWords->setReadOnly(0);
     ui->NeedIntegers->setReadOnly(0);
     ui->GiveIntegers->setReadOnly(0);
@@ -160,11 +159,6 @@ void EditWordListDialog::Load(size_t id)
     ui->one_word->setEnabled(1);
     ui->CreateNewWord->setEnabled(1);
     ui->isVariable->setEnabled(1);
-    ui->StartWord->setText(WL[id].StartWord);
-    ui->EndWords->setText(WL[id].EndWords);
-    ui->desciption->setPlainText(WL[id].description);
-    ui->NeedIntegers->setText(QString::number(WL[id].NeedNumbers));
-    ui->GiveIntegers->setText(QString::number(WL[id].GiveNumbers));
     if(WL[id].StartAndEndWordInOneLine)
     {
         ui->SaEWiOL->setCheckState(Qt::Checked);
@@ -205,6 +199,11 @@ void EditWordListDialog::Load(size_t id)
         ui->isVariable->setChecked(1);
         on_isVariable_clicked();
     }
+    ui->StartWord->setText(WL[id].StartWord);
+    ui->EndWords->setText(WL[id].EndWords);
+    ui->desciption->setPlainText(WL[id].description);
+    ui->NeedIntegers->setText(QString::number(WL[id].NeedNumbers));
+    ui->GiveIntegers->setText(QString::number(WL[id].GiveNumbers));
 }
 void EditWordListDialog::on_list_itemClicked(QListWidgetItem *item)
 {
